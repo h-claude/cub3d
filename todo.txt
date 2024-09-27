@@ -1,0 +1,6 @@
+Verif nombre d'argument
+verif nom de fichier
+gnl chaque ligne
+split chaque ligne verif la premiere chaine pour savoir ou affecter
+free la ligne ensuite et le split
+
