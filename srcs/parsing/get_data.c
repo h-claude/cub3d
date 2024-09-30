@@ -6,11 +6,56 @@
 /*   By: hclaude <hclaude@student.42mulhouse.fr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/30 13:22:15 by hclaude           #+#    #+#             */
-/*   Updated: 2024/09/30 18:05:24 by hclaude          ###   ########.fr       */
+/*   Updated: 2024/09/30 23:26:52 by hclaude          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../include/cub.h"
+
+void	free_gnl(int fd)
+{
+	close(fd);
+	get_next_line(fd);
+}
+
+size_t	tab_len(char **tab)
+{
+	size_t	len;
+	
+	len = 0;
+	while (tab[len])
+		len++;
+	return (len);
+}
+
+void	freetab(char **tab)
+{
+	int	i;
+
+	i = 0;
+	while (tab[i])
+		free(tab[i++]);
+	free(tab);
+}
+
+int32_t	convert_int(char *str)
+{
+	char	**splt_str;
+	int		r;
+	int		g;
+	int		b;
+
+	splt_str = ft_split(str, ',');
+	if (tab_len(splt_str) != 3)
+		return (freetab(splt_str), -1);
+	r = ft_atoi(splt_str[0]);
+	g = ft_atoi(splt_str[1]);
+	b = ft_atoi(splt_str[2]);
+	freetab(splt_str);
+	if ((r < 0 || r > 255) || (g < 0 || g > 255) || (b < 0 || b > 255))
+		return (-1);
+	return ((r << 16) | (g << 8) | b);
+}
 
 int	data_is_collected(t_cub *cub)
 {
@@ -69,9 +114,9 @@ int	put_data(char *str, t_cub *cub, t_data_type type)
 	else if (type == EAST)
 		cub->textcol->ea = ft_strdup(str);
 	else if (type == FLOOR)
-		cub->textcol->f = 0;//convert_int(str); // convert string to int32
+		cub->textcol->f = convert_int(str); // convert string to int32
 	else if (type == CEILING)
-		cub->textcol->c = 0;//convert_int(str); // convert string to int32
+		cub->textcol->c = convert_int(str); // convert string to int32
 	return (0);
 }
 
@@ -103,20 +148,44 @@ int	extract_data(char *str, t_cub *cub)
 	return (0);
 }
 
+int	check_data(t_cub *cub)
+{
+	if (!cub->textcol->no)
+		return ((void)printf("Error\nNORTH texture\n"), 1);
+	if (!cub->textcol->so)
+		return ((void)printf("Error\nSOUTH texture\n"), 1);
+	if (!cub->textcol->ea)
+		return ((void)printf("Error\nEAST texture\n"), 1);
+	if (!cub->textcol->we)
+		return ((void)printf("Error\nWEST texture\n"), 1);
+	if (cub->textcol->f == -1)
+		return ((void)printf("Error\nFLOOR color\n"), 1);
+	if (cub->textcol->c == -1)
+		return ((void)printf("Error\nCEILING color\n"), 1);
+	return (0);
+}
+
 int	get_data(t_cub *cub)
 {
 	char	*str;
+	int		done;
 
+	done = 0;
 	str = get_next_line(cub->fd);
 	if (!str)
-		return (1);//fail
-	while (str && !data_is_collected(cub))
+		return (free_gnl(cub->fd), 1);//fail
+	while (str && !done)
 	{
 		if (*str != '\n' && extract_data(str, cub))
-			return (free(str), 1);
+			return (free(str), free_gnl(cub->fd), 1);
 		free(str);
-		str = get_next_line(cub->fd);
+		done = data_is_collected(cub);
+		if (!done)
+			str = get_next_line(cub->fd);
 	}
-	parse_map(cub);
+	if (check_data(cub))
+		return (free_gnl(cub->fd), 1);
+	if (parse_map(cub))
+		return (free_gnl(cub->fd), 1);
 	return (0);
 }

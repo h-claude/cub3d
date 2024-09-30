@@ -6,7 +6,7 @@
 /*   By: hclaude <hclaude@student.42mulhouse.fr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/30 16:31:26 by hclaude           #+#    #+#             */
-/*   Updated: 2024/09/30 19:16:05 by hclaude          ###   ########.fr       */
+/*   Updated: 2024/09/30 22:33:54 by hclaude          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -95,7 +95,7 @@ int	parse_map(t_cub *cub)
 		return ((void)printf("Error\nFile is broken\n"), 1);	
 	lst = malloc(sizeof(t_list));
 	if (!lst)
-		return ((void)printf("Error\nFile is broken\n"), free(str), 1);
+		return ((void)printf("Error\nFailed malloc\n"), free(str), 1);
 	lst->content = NULL;
 	lst->next = NULL;
 	while (str)

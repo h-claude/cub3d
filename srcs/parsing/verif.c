@@ -6,11 +6,54 @@
 /*   By: hclaude <hclaude@student.42mulhouse.fr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/27 16:37:41 by hclaude           #+#    #+#             */
-/*   Updated: 2024/09/30 19:29:46 by hclaude          ###   ########.fr       */
+/*   Updated: 2024/10/01 00:36:02 by hclaude          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../include/cub.h"
+
+int	is_player(char player)
+{
+	if (player == 'N' || player == 'S' || player == 'E' || player == 'W')
+		return (1);
+	return (0);
+}
+
+int	is_multiple_player(char **map)
+{
+	int	y;
+	int	x;
+	int	player;
+
+	y = 0;
+	x = 0;
+	player = 0;
+	while (map[y])
+	{
+		while (map[y][x])
+		{
+			if (is_player(map[y][x]))
+				player++;
+			x++;
+		}
+		y++;
+		x = 0;
+	}
+	if (player != 1)
+		return (1);
+	return (0);
+}
+
+int	check_map(char **map)
+{
+	if (is_multiple_player(map))
+		return ((void)printf("Error\nThere is multiple or no player\n"), 1);
+	if (is_wrong_character(map))
+		return ((void)printf("Error\nThere is a wrong character\n"), 1);
+	if (flood_fill(map))
+		return ((void)printf("Error\nThere is a big hole in the map\n"), 1);
+	return (0);
+}
 
 int	init_cub(t_cub *cub)
 {

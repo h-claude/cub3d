@@ -6,7 +6,7 @@
 /*   By: hclaude <hclaude@student.42mulhouse.fr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/27 14:47:24 by hclaude           #+#    #+#             */
-/*   Updated: 2024/09/30 18:04:20 by hclaude          ###   ########.fr       */
+/*   Updated: 2024/10/01 00:20:09 by hclaude          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,5 +50,6 @@ typedef struct cub
 int	start_parsing(t_cub *cub, char *file);
 int	get_data(t_cub *cub);
 int	parse_map(t_cub *cub);
+int	check_map(char **map);
 
 #endif
