@@ -6,7 +6,7 @@
 /*   By: hclaude <hclaude@student.42mulhouse.fr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/27 15:07:42 by hclaude           #+#    #+#             */
-/*   Updated: 2024/09/30 19:16:35 by hclaude          ###   ########.fr       */
+/*   Updated: 2024/09/30 19:27:34 by hclaude          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,10 @@ void print_data(t_cub *cub)
 	printf("cub->textcol->no = %s", cub->textcol->no);
 	printf("cub->textcol->so = %s", cub->textcol->so);
 	printf("cub->textcol->we = %s", cub->textcol->we);
-	printf("cub->textcol->ea = %s\n", cub->textcol->ea);
+	printf("cub->textcol->ea = %s", cub->textcol->ea);
+	printf("cub->textcol->f = %d\n", cub->textcol->f);
+	printf("cub->textcol->c = %d\n\n", cub->textcol->c);
+	
 	int i = 0;
 	printf("MAP :\n");
 	while (cub->map[i])

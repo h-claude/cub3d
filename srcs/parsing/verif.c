@@ -6,7 +6,7 @@
 /*   By: hclaude <hclaude@student.42mulhouse.fr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/27 16:37:41 by hclaude           #+#    #+#             */
-/*   Updated: 2024/09/30 18:32:45 by hclaude          ###   ########.fr       */
+/*   Updated: 2024/09/30 19:29:46 by hclaude          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,6 +48,7 @@ int	start_parsing(t_cub *cub, char *file)
 		return (1);
 	if (check_file(file, cub))
 		return (1);
-	get_data(cub);
+	if (get_data(cub))
+		return (1);
 	return (0);
 }
