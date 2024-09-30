@@ -6,7 +6,7 @@
 /*   By: hclaude <hclaude@student.42mulhouse.fr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/27 14:47:24 by hclaude           #+#    #+#             */
-/*   Updated: 2024/09/27 16:37:56 by hclaude          ###   ########.fr       */
+/*   Updated: 2024/09/30 18:04:20 by hclaude          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,17 @@
 # include <math.h>
 # include <fcntl.h>
 # include <stdio.h>
+# include <sys/errno.h>
+
+typedef enum e_data_type
+{
+	NORTH,
+	SOUTH,
+	WEST,
+	EAST,
+	FLOOR,
+	CEILING
+}	t_data_type;
 
 typedef struct s_textcol
 {
@@ -35,5 +46,9 @@ typedef struct cub
 	char				**map;
 	struct s_textcol 	*textcol;
 }	t_cub;
+
+int	start_parsing(t_cub *cub, char *file);
+int	get_data(t_cub *cub);
+int	parse_map(t_cub *cub);
 
 #endif
