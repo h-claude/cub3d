@@ -18,7 +18,7 @@ $(OBJDIR)/%.o: %.c
 
 ${NAME}: ${OBJS}
 	@make -s -C ./turbo_libft
-	@$(CC) ${OBJS} -Lturbo_libft -lft $(INCLUDE) -o ${NAME} ${CFLAGS}
+	@$(CC) ${OBJS} -framework Cocoa -framework OpenGL -framework IOKit -Lturbo_libft -lft $(INCLUDE) -o ${NAME} ${CFLAGS}
 	@echo "\033[32mcub3D compiled\033[0m"
 
 clean:

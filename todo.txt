@@ -3,3 +3,9 @@ verif nom de fichier
 gnl chaque ligne
 split chaque ligne verif la premiere chaine pour savoir ou affecter
 free la ligne ensuite et le split
+
+
+Poir la 3d je dois changer l'echelle de la map :
+- Soit je copie la map et je la met a l'echelle
+- soit j'utilise des float pour coordonne du joueur et je lorsque je recupere
+  une donnee de la map je la multiplie 
