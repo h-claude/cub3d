@@ -6,7 +6,7 @@
 /*   By: hclaude <hclaude@student.42mulhouse.fr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/30 13:22:15 by hclaude           #+#    #+#             */
-/*   Updated: 2024/09/30 23:26:52 by hclaude          ###   ########.fr       */
+/*   Updated: 2024/10/01 16:39:50 by hclaude          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,6 +36,23 @@ void	freetab(char **tab)
 	while (tab[i])
 		free(tab[i++]);
 	free(tab);
+}
+
+int	check_dup_data(t_cub *cub, t_data_type type)
+{
+	if (type == NORTH && cub->textcol->no)
+		return ((void)printf("Error\nWhat is wrong with u?\n"), 1);
+	if (type == SOUTH && cub->textcol->so)
+		return ((void)printf("Error\nWhat is wrong with u?\n"), 1);
+	if (type == WEST && cub->textcol->we)
+		return ((void)printf("Error\nWhat is wrong with u?\n"), 1);
+	if (type == EAST && cub->textcol->ea)
+		return ((void)printf("Error\nWhat is wrong with u?\n"), 1);
+	if (type == FLOOR && cub->textcol->f != -1)
+		return ((void)printf("Error\nWhat is wrong with u?\n"), 1);
+	if (type == CEILING && cub->textcol->c != -1)
+		return ((void)printf("Error\nWhat is wrong with u?\n"), 1);
+	return (0);
 }
 
 int32_t	convert_int(char *str)
@@ -104,7 +121,8 @@ int	put_data(char *str, t_cub *cub, t_data_type type)
 		str++;
 	while (*str == ' ' || *str == '\t')
 		str++;
-	// proteger malloc
+	if (check_dup_data(cub, type))
+		return (1);
 	if (type == NORTH)
 		cub->textcol->no = ft_strdup(str);
 	else if (type == SOUTH)
@@ -134,17 +152,17 @@ int	extract_data(char *str, t_cub *cub)
 		return (1);
 	}
 	if (str[i] == 'N')
-		put_data(str, cub, NORTH);
+		return (put_data(str, cub, NORTH));
 	else if (str[i] == 'S')
-		put_data(str, cub, SOUTH);
+		return (put_data(str, cub, SOUTH));
 	else if (str[i] == 'W')
-		put_data(str, cub, WEST);
+		return (put_data(str, cub, WEST));
 	else if (str[i] == 'E')
-		put_data(str, cub, EAST);
+		return (put_data(str, cub, EAST));
 	else if (str[i] == 'F')
-		put_data(str, cub, FLOOR);
+		return (put_data(str, cub, FLOOR));
 	else if (str[i] == 'C')
-		put_data(str, cub, CEILING);
+		return (put_data(str, cub, CEILING));
 	return (0);
 }
 

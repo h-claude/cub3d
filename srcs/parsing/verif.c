@@ -6,7 +6,7 @@
 /*   By: hclaude <hclaude@student.42mulhouse.fr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/27 16:37:41 by hclaude           #+#    #+#             */
-/*   Updated: 2024/10/01 16:17:00 by hclaude          ###   ########.fr       */
+/*   Updated: 2024/10/01 16:40:53 by hclaude          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -99,7 +99,7 @@ int	init_cub(t_cub *cub)
 
 int	check_file(char *file, t_cub *cub)
 {
-	if (ft_strlen(file) < 4 &&
+	if (ft_strlen(file) < 4 ||
 		ft_strncmp(file + (ft_strlen(file) - 4), ".cub", 4) != 0)
 	{
 		printf("Error\nWrong file extension\n");
