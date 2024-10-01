@@ -6,7 +6,7 @@ INCLUDE = -I./include
 
 OBJDIR= .objs
 
-SRCS = srcs/main.c srcs/parsing/verif.c srcs/parsing/get_data.c srcs/parsing/map.c
+SRCS = srcs/main.c srcs/parsing/verif.c srcs/parsing/get_data.c srcs/parsing/map.c srcs/parsing/flood_fill.c
 
 OBJS = $(patsubst %.c, $(OBJDIR)/%.o, $(SRCS))
 

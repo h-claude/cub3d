@@ -6,7 +6,7 @@
 /*   By: hclaude <hclaude@student.42mulhouse.fr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/27 16:37:41 by hclaude           #+#    #+#             */
-/*   Updated: 2024/10/01 00:36:02 by hclaude          ###   ########.fr       */
+/*   Updated: 2024/10/01 16:17:00 by hclaude          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,30 @@ int	is_player(char player)
 	return (0);
 }
 
-int	is_multiple_player(char **map)
+int	is_wrong_character(char **map)
+{
+	int	y;
+	int	x;
+
+	y = 0;
+	x = 0;
+	while (map[y])
+	{
+		while (map[y][x])
+		{
+			if (map[y][x] != ' ' && map[y][x] != '\t'
+				&& map[y][x] != '0' && map[y][x] != '1'
+					&& !is_player(map[y][x]) && map[y][x] != '\n')
+				return (1);
+			x++;
+		}
+		x = 0;
+		y++;
+	}
+	return (0);
+}
+
+int	is_multiple_player(t_cub *cub)
 {
 	int	y;
 	int	x;
@@ -28,12 +51,16 @@ int	is_multiple_player(char **map)
 	y = 0;
 	x = 0;
 	player = 0;
-	while (map[y])
+	while (cub->map[y])
 	{
-		while (map[y][x])
+		while (cub->map[y][x])
 		{
-			if (is_player(map[y][x]))
+			if (is_player(cub->map[y][x]))
+			{
+				cub->y_p = y;
+				cub->x_p = x;
 				player++;
+			}
 			x++;
 		}
 		y++;
@@ -44,13 +71,13 @@ int	is_multiple_player(char **map)
 	return (0);
 }
 
-int	check_map(char **map)
+int	check_map(t_cub *cub)
 {
-	if (is_multiple_player(map))
+	if (is_multiple_player(cub))
 		return ((void)printf("Error\nThere is multiple or no player\n"), 1);
-	if (is_wrong_character(map))
+	if (is_wrong_character(cub->map))
 		return ((void)printf("Error\nThere is a wrong character\n"), 1);
-	if (flood_fill(map))
+	if (flood_fill(cub->map, cub->y_p, cub->x_p))
 		return ((void)printf("Error\nThere is a big hole in the map\n"), 1);
 	return (0);
 }
@@ -58,6 +85,8 @@ int	check_map(char **map)
 int	init_cub(t_cub *cub)
 {
 	cub->fd = 0;
+	cub->x_p = 0;
+	cub->y_p = 0;
 	cub->map = NULL;
 	cub->textcol->c = -1;
 	cub->textcol->f = -1;
