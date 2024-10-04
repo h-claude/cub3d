@@ -6,11 +6,11 @@
 /*   By: hclaude <hclaude@student.42mulhouse.fr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/30 16:31:26 by hclaude           #+#    #+#             */
-/*   Updated: 2024/09/30 22:33:54 by hclaude          ###   ########.fr       */
+/*   Updated: 2024/10/04 09:00:49 by hclaude          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../include/cub.h"
+#include "cub.h"
 
 void	free_lst(t_list **lst)
 {

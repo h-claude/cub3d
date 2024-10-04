@@ -6,7 +6,7 @@
 /*   By: hclaude <hclaude@student.42mulhouse.fr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/27 14:47:24 by hclaude           #+#    #+#             */
-/*   Updated: 2024/10/01 16:11:46 by hclaude          ###   ########.fr       */
+/*   Updated: 2024/10/02 00:10:12 by hclaude          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,7 @@
 # include <fcntl.h>
 # include <stdio.h>
 # include <sys/errno.h>
+# include "../MLX42/include/MLX42/MLX42.h"
 
 typedef enum e_data_type
 {
@@ -54,5 +55,6 @@ int	get_data(t_cub *cub);
 int	parse_map(t_cub *cub);
 int	check_map(t_cub *cub);
 int	flood_fill(char **map, int y, int x);
+int	show_map(t_cub *cub);
 
 #endif

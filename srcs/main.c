@@ -6,11 +6,11 @@
 /*   By: hclaude <hclaude@student.42mulhouse.fr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/27 15:07:42 by hclaude           #+#    #+#             */
-/*   Updated: 2024/10/01 16:12:03 by hclaude          ###   ########.fr       */
+/*   Updated: 2024/10/04 09:00:36 by hclaude          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../include/cub.h"
+#include "cub.h"
 
 void print_data(t_cub *cub)
 {
@@ -54,6 +54,8 @@ int	main(int argc, char **argv)
 	if (start_parsing(cub, argv[1]))
 		return (1); // faire fonction qui free tout
 	if (check_map(cub))
+		return (1);
+	if (show_map(cub))
 		return (1);
 	print_data(cub);
 }
