@@ -6,7 +6,7 @@
 /*   By: hclaude <hclaude@student.42mulhouse.fr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/27 15:07:42 by hclaude           #+#    #+#             */
-/*   Updated: 2024/10/04 09:00:36 by hclaude          ###   ########.fr       */
+/*   Updated: 2024/10/06 13:35:06 by hclaude          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,7 +55,7 @@ int	main(int argc, char **argv)
 		return (1); // faire fonction qui free tout
 	if (check_map(cub))
 		return (1);
+	print_data(cub);
 	if (show_map(cub))
 		return (1);
-	print_data(cub);
 }

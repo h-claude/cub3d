@@ -6,7 +6,7 @@
 /*   By: hclaude <hclaude@student.42mulhouse.fr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/30 13:22:15 by hclaude           #+#    #+#             */
-/*   Updated: 2024/10/04 09:00:53 by hclaude          ###   ########.fr       */
+/*   Updated: 2024/10/06 14:41:55 by hclaude          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,7 +71,7 @@ int32_t	convert_int(char *str)
 	freetab(splt_str);
 	if ((r < 0 || r > 255) || (g < 0 || g > 255) || (b < 0 || b > 255))
 		return (-1);
-	return ((r << 16) | (g << 8) | b);
+	return ((r << 24) | (g << 16) | b << 8 | 255);
 }
 
 int	data_is_collected(t_cub *cub)
