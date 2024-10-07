@@ -6,7 +6,7 @@
 /*   By: hclaude <hclaude@student.42mulhouse.fr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/01 23:59:19 by hclaude           #+#    #+#             */
-/*   Updated: 2024/10/07 18:11:16 by hclaude          ###   ########.fr       */
+/*   Updated: 2024/10/07 19:42:35 by hclaude          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,33 +43,27 @@ void	input(void *cub1)
 {
 	t_cub	*cub = (t_cub *)cub1;
 
+	if (mlx_is_key_down(mlx, MLX_KEY_ESCAPE))
+		exit(0); // faut faire ca bien
 	if (mlx_is_key_down(mlx, MLX_KEY_W))
 	{
 		if (player_can_reach(cub->y_p - 0.05, cub->x_p, cub))
-		{
 			cub->y_p -= 0.05;
-		}
 	}
 	if (mlx_is_key_down(mlx, MLX_KEY_S))
 	{
 		if (player_can_reach(cub->y_p + 0.05, cub->x_p, cub))
-		{
 			cub->y_p += 0.05;
-		}
 	}
 	if (mlx_is_key_down(mlx, MLX_KEY_A))
 	{
 		if (player_can_reach(cub->y_p, cub->x_p - 0.05, cub))
-		{
 			cub->x_p -= 0.05;
-		}
 	}
 	if (mlx_is_key_down(mlx, MLX_KEY_D))
 	{
 		if (player_can_reach(cub->y_p, cub->x_p + 0.05, cub))
-		{
 			cub->x_p += 0.05;
-		}
 	}
 }
 
@@ -94,7 +88,7 @@ void	print_player(t_cub *cub)
 {
 	float	i = 0;
 	float	j = 0;
-	
+
 	i = cub->x_p * 24;
 	j = cub->y_p * 24;
 	while (j < cub->y_p * 24 + 10)
