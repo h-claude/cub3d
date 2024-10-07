@@ -6,7 +6,7 @@
 /*   By: hclaude <hclaude@student.42mulhouse.fr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/27 15:07:42 by hclaude           #+#    #+#             */
-/*   Updated: 2024/10/06 13:35:06 by hclaude          ###   ########.fr       */
+/*   Updated: 2024/10/07 14:53:29 by hclaude          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,9 @@ void print_data(t_cub *cub)
 	printf("cub->textcol->ea = %s", cub->textcol->ea);
 	printf("cub->textcol->f = %d\n", cub->textcol->f);
 	printf("cub->textcol->c = %d\n\n", cub->textcol->c);
-	
+	printf("cub->x_p = %f\n", cub->x_p);
+	printf("cub->y_p = %f\n", cub->y_p);
+
 	int i = 0;
 	printf("MAP :\n");
 	while (cub->map[i])
@@ -33,7 +35,7 @@ void print_data(t_cub *cub)
 int	main(int argc, char **argv)
 {
 	t_cub	*cub;
-	
+
 	if (argc != 2)
 	{
 		printf("Error\nInvalid number of arguments\n");
@@ -53,9 +55,9 @@ int	main(int argc, char **argv)
 	}
 	if (start_parsing(cub, argv[1]))
 		return (1); // faire fonction qui free tout
+	print_data(cub);
 	if (check_map(cub))
 		return (1);
-	print_data(cub);
 	if (show_map(cub))
 		return (1);
 }

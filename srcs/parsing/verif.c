@@ -6,7 +6,7 @@
 /*   By: hclaude <hclaude@student.42mulhouse.fr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/27 16:37:41 by hclaude           #+#    #+#             */
-/*   Updated: 2024/10/04 09:00:43 by hclaude          ###   ########.fr       */
+/*   Updated: 2024/10/07 15:20:49 by hclaude          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,8 +57,9 @@ int	is_multiple_player(t_cub *cub)
 		{
 			if (is_player(cub->map[y][x]))
 			{
-				cub->y_p = y;
-				cub->x_p = x;
+				printf("\nPlayer found at %d, %d\n", y, x);
+				cub->y_p = (float)y + 0.000000001;
+				cub->x_p = (float)x + 0.000000001;
 				player++;
 			}
 			x++;

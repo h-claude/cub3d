@@ -6,7 +6,7 @@
 /*   By: hclaude <hclaude@student.42mulhouse.fr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/30 16:31:26 by hclaude           #+#    #+#             */
-/*   Updated: 2024/10/04 09:00:49 by hclaude          ###   ########.fr       */
+/*   Updated: 2024/10/07 14:26:32 by hclaude          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,7 +57,7 @@ int	lst_add_node(t_list *lst, char *content)
 		{
 			printf("Error\nFailed malloc\n");
 			return (1);
-		}	
+		}
 	}
 	return (0);
 }
@@ -72,7 +72,7 @@ int	lst_to_cub(t_cub *cub, t_list **lst)
 	cub->map = malloc(sizeof(char *) * lstlen(*lst) + 1);
 	if (!cub->map)
 		return (free_lst(lst), (void)printf("Error\nFailed malloc\n"), 1);
-	cub->map[lstlen(*lst) + 1] = NULL;
+	cub->map[lstlen(*lst)] = NULL;
 	while (tmp_lst)
 	{
 		cub->map[i] = ft_strdup((char *)tmp_lst->content);
@@ -92,7 +92,7 @@ int	parse_map(t_cub *cub)
 
 	str = get_next_line(cub->fd);
 	if (!str)
-		return ((void)printf("Error\nFile is broken\n"), 1);	
+		return ((void)printf("Error\nFile is broken\n"), 1);
 	lst = malloc(sizeof(t_list));
 	if (!lst)
 		return ((void)printf("Error\nFailed malloc\n"), free(str), 1);

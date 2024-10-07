@@ -1,11 +1,11 @@
 NAME = cub3D
 
-CC = @cc
+CC = cc
 CFLAGS 	= -Wall -Wextra -Werror -Wno-unused-function -g3
-INCLUDE = -I./include
+LIBFT = -Lturbo_libft -Iturbo_libft/include -lft
 
 GLFW = -I/opt/homebrew/include -L/opt/homebrew/lib -lglfw -ldl -pthread -lm
-MLX = -framework Cocoa -framework OpenGL -framework IOKit -LMLX42/build/ -lmlx42 $(GLFW)
+MLX = -IMLX42/include/ -LMLX42/build/ -lmlx42 $(GLFW)
 
 OBJDIR= .objs
 
@@ -13,6 +13,8 @@ SRCS = srcs/main.c srcs/parsing/verif.c srcs/parsing/get_data.c srcs/parsing/map
 srcs/exec_map/init_map.c
 
 OBJS = $(patsubst %.c, $(OBJDIR)/%.o, $(SRCS))
+
+INCLUDE = -I./include
 
 all : $(NAME)
 
@@ -22,7 +24,7 @@ $(OBJDIR)/%.o: %.c
 
 ${NAME}: ${OBJS}
 	@make -s -C ./turbo_libft
-	@$(CC) ${OBJS} -Lturbo_libft -lft $(INCLUDE) $(MLX) -o ${NAME} ${CFLAGS}
+	@$(CC) ${OBJS} $(LIBFT) $(MLX) -o ${NAME} ${CFLAGS}
 	@echo "\033[32mcub3D compiled\033[0m"
 
 clean:
