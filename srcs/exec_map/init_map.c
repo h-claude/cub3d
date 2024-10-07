@@ -6,13 +6,13 @@
 /*   By: hclaude <hclaude@student.42mulhouse.fr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/01 23:59:19 by hclaude           #+#    #+#             */
-/*   Updated: 2024/10/07 16:35:50 by hclaude          ###   ########.fr       */
+/*   Updated: 2024/10/07 18:11:16 by hclaude          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "cub.h"
 
-static mlx_t	*mlx;
+static mlx_t		*mlx;
 static mlx_image_t	*image;
 
 int	player_can_reach(float y, float x, t_cub *cub)
@@ -41,34 +41,34 @@ int	player_can_reach(float y, float x, t_cub *cub)
 
 void	input(void *cub1)
 {
-	t_cub *cub = (t_cub *)cub1;
+	t_cub	*cub = (t_cub *)cub1;
 
 	if (mlx_is_key_down(mlx, MLX_KEY_W))
 	{
 		if (player_can_reach(cub->y_p - 0.05, cub->x_p, cub))
 		{
-			cub->y_p-= 0.05;
+			cub->y_p -= 0.05;
 		}
 	}
 	if (mlx_is_key_down(mlx, MLX_KEY_S))
 	{
 		if (player_can_reach(cub->y_p + 0.05, cub->x_p, cub))
 		{
-			cub->y_p+= 0.05;
+			cub->y_p += 0.05;
 		}
 	}
 	if (mlx_is_key_down(mlx, MLX_KEY_A))
 	{
 		if (player_can_reach(cub->y_p, cub->x_p - 0.05, cub))
 		{
-			cub->x_p-= 0.05;
+			cub->x_p -= 0.05;
 		}
 	}
 	if (mlx_is_key_down(mlx, MLX_KEY_D))
 	{
 		if (player_can_reach(cub->y_p, cub->x_p + 0.05, cub))
 		{
-			cub->x_p+= 0.05;
+			cub->x_p += 0.05;
 		}
 	}
 }
@@ -77,6 +77,7 @@ void	print_cub(int y, int x, int32_t color)
 {
 	int	y1 = y + 24;
 	int	x1 = x + 24;
+
 	while (y1 != y)
 	{
 		while (x1 != x)
@@ -93,10 +94,9 @@ void	print_player(t_cub *cub)
 {
 	float	i = 0;
 	float	j = 0;
+	
 	i = cub->x_p * 24;
 	j = cub->y_p * 24;
-	//printf("Player at %f, %f\n", j, i);
-
 	while (j < cub->y_p * 24 + 10)
 	{
 		while (i < cub->x_p * 24 + 10)
@@ -111,10 +111,10 @@ void	print_player(t_cub *cub)
 
 void	put_color(void *cub1)
 {
-	int x;
-	int y;
-	int	i = 0;
-	int j =0;
+	int		x;
+	int		y;
+	int		i = 0;
+	int		j = 0;
 	t_cub	*cub;
 
 	x = 0, y = 0;
@@ -125,8 +125,6 @@ void	put_color(void *cub1)
 		{
 			if (cub->map[y][x] == ' ')
 			{
-
-				// print_cub(i, j , 0);
 			}
 			if (cub->map[y][x] == '1')
 				print_cub(j, i, cub->textcol->f);
@@ -150,13 +148,9 @@ void	put_color(void *cub1)
 
 int	show_map(t_cub *cub)
 {
-	//mlx_image_t	*image1;
-	//image1 = mlx_new_image(mlx, 200, 200);
-
 	mlx = mlx_init(1000, 1000, "", false);
 	image = mlx_new_image(mlx, 1000, 1000);
 	mlx_image_to_window(mlx, image, 0, 0);
-	//mlx_image_to_window(mlx, image1, 1100, 600);
 	mlx_loop_hook(mlx, put_color, cub);
 	mlx_loop_hook(mlx, input, cub);
 	mlx_loop(mlx);

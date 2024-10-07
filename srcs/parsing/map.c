@@ -6,7 +6,7 @@
 /*   By: hclaude <hclaude@student.42mulhouse.fr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/30 16:31:26 by hclaude           #+#    #+#             */
-/*   Updated: 2024/10/07 14:26:32 by hclaude          ###   ########.fr       */
+/*   Updated: 2024/10/07 18:05:13 by hclaude          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@ void	free_lst(t_list **lst)
 	}
 }
 
-size_t lstlen(t_list *lst)
+size_t	lstlen(t_list *lst)
 {
 	size_t	i;
 
@@ -64,7 +64,7 @@ int	lst_add_node(t_list *lst, char *content)
 
 int	lst_to_cub(t_cub *cub, t_list **lst)
 {
-	int	i;
+	int		i;
 	t_list	*tmp_lst;
 
 	tmp_lst = *lst;

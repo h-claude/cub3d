@@ -6,7 +6,7 @@
 /*   By: hclaude <hclaude@student.42mulhouse.fr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/27 14:47:24 by hclaude           #+#    #+#             */
-/*   Updated: 2024/10/07 14:38:03 by hclaude          ###   ########.fr       */
+/*   Updated: 2024/10/07 18:04:50 by hclaude          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,6 +46,7 @@ typedef struct cub
 	int					fd;
 	float				x_p;
 	float				y_p;
+	float				dir;
 	char				**map;
 	struct s_textcol 	*textcol;
 }	t_cub;
@@ -57,5 +58,6 @@ int	check_map(t_cub *cub);
 int	flood_fill(char **map, int y, int x);
 int	show_map(t_cub *cub);
 int	is_player(char player);
+int	check_file(char *file, t_cub *cub);
 
 #endif

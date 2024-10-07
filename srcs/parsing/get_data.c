@@ -6,7 +6,7 @@
 /*   By: hclaude <hclaude@student.42mulhouse.fr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/30 13:22:15 by hclaude           #+#    #+#             */
-/*   Updated: 2024/10/06 14:41:55 by hclaude          ###   ########.fr       */
+/*   Updated: 2024/10/07 18:06:43 by hclaude          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ void	free_gnl(int fd)
 size_t	tab_len(char **tab)
 {
 	size_t	len;
-	
+
 	len = 0;
 	while (tab[len])
 		len++;
@@ -93,15 +93,15 @@ int	data_is_collected(t_cub *cub)
 
 int	verif_syntax(char *str)
 {
-	if ((*str == 'N' && *(str + 1) == 'O') ||
-		(*str == 'S' && *(str + 1) == 'O') ||
-		(*str == 'W' && *(str + 1) == 'E') ||
-		(*str == 'E' && *(str + 1) == 'A'))
-    {
-        str += 2;
-        if (*str == ' ' || *str == '\t')
-            return (0);
-    }
+	if ((*str == 'N' && *(str + 1) == 'O')
+		|| (*str == 'S' && *(str + 1) == 'O')
+		|| (*str == 'W' && *(str + 1) == 'E')
+		|| (*str == 'E' && *(str + 1) == 'A'))
+	{
+		str += 2;
+		if (*str == ' ' || *str == '\t')
+			return (0);
+	}
 	else if (*str == 'F' || *str == 'C')
 	{
 		str++;
@@ -132,9 +132,9 @@ int	put_data(char *str, t_cub *cub, t_data_type type)
 	else if (type == EAST)
 		cub->textcol->ea = ft_strdup(str);
 	else if (type == FLOOR)
-		cub->textcol->f = convert_int(str); // convert string to int32
+		cub->textcol->f = convert_int(str);
 	else if (type == CEILING)
-		cub->textcol->c = convert_int(str); // convert string to int32
+		cub->textcol->c = convert_int(str);
 	return (0);
 }
 
@@ -145,8 +145,8 @@ int	extract_data(char *str, t_cub *cub)
 	i = 0;
 	while (str[i] == ' ' || str[i] == '\t')
 		i++;
-	if (str[i] != 'N' && str[i] != 'S' &&
-		str[i] != 'W' && str[i] != 'E' && str[i] != 'F' && str[i] != 'C')
+	if (str[i] != 'N' && str[i] != 'S'
+		&& str[i] != 'W' && str[i] != 'E' && str[i] != 'F' && str[i] != 'C')
 	{
 		printf("Error\nMap is broken\n");
 		return (1);
