@@ -6,7 +6,7 @@
 /*   By: hclaude <hclaude@student.42mulhouse.fr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/27 15:07:42 by hclaude           #+#    #+#             */
-/*   Updated: 2024/10/07 18:08:15 by hclaude          ###   ########.fr       */
+/*   Updated: 2024/10/08 14:58:22 by hclaude          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,6 +25,7 @@ void	print_data(t_cub *cub)
 	printf("cub->textcol->c = %d\n\n", cub->textcol->c);
 	printf("cub->x_p = %f\n", cub->x_p);
 	printf("cub->y_p = %f\n", cub->y_p);
+	printf("cub->dir_p = %f\n\n", cub->dir_p);
 	printf("MAP :\n");
 	while (cub->map[i])
 	{
@@ -38,7 +39,7 @@ int	init_cub(t_cub *cub)
 	cub->fd = 0;
 	cub->x_p = 0;
 	cub->y_p = 0;
-	cub->dir = 0;
+	cub->dir_p = 0;
 	cub->map = NULL;
 	cub->textcol->c = -1;
 	cub->textcol->f = -1;
@@ -83,9 +84,9 @@ int	main(int argc, char **argv)
 	}
 	if (start_parsing(cub, argv[1]))
 		return (1); // faire fonction qui free tout
-	print_data(cub);
 	if (check_map(cub))
 		return (1);
+	print_data(cub);
 	if (show_map(cub))
 		return (1);
 }

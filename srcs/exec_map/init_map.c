@@ -6,7 +6,7 @@
 /*   By: hclaude <hclaude@student.42mulhouse.fr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/01 23:59:19 by hclaude           #+#    #+#             */
-/*   Updated: 2024/10/07 19:42:35 by hclaude          ###   ########.fr       */
+/*   Updated: 2024/10/08 16:36:57 by hclaude          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,10 +67,10 @@ void	input(void *cub1)
 	}
 }
 
-void	print_cub(int y, int x, int32_t color)
+void	print_cub(int y, int x, int32_t color, int size)
 {
-	int	y1 = y + 24;
-	int	x1 = x + 24;
+	int	y1 = y + size;
+	int	x1 = x + size;
 
 	while (y1 != y)
 	{
@@ -79,7 +79,7 @@ void	print_cub(int y, int x, int32_t color)
 			mlx_put_pixel(image, x, y, color);
 			x++;
 		}
-		x = x - 24;
+		x = x - size;
 		y++;
 	}
 }
@@ -103,6 +103,52 @@ void	print_player(t_cub *cub)
 	}
 }
 
+void	put_rays(t_cub *cub)
+{
+	int		angle = 0;
+	float	ray_angle = 0;
+	float	ray_x = cub->x_p;
+	float	ray_y = cub->y_p;
+	float	ray_dir_x;
+	float	ray_dir_y;
+
+	while (angle < 360)
+	{
+		ray_angle = angle * (M_PI / 180);
+		ray_dir_y = sin(ray_angle);
+		ray_dir_x = cos(ray_angle);
+		ray_x = cub->x_p;
+		ray_y = cub->y_p;
+		angle++;
+		while (cub->map[(int)ray_y][(int)ray_x] != '1')
+		{
+			printf("Ray at %f, %f\n", ray_x * 24, ray_y * 24);
+			mlx_put_pixel(image, ray_x * 24, ray_y * 24, 0x0000FF00);
+			ray_x += ray_dir_x * 0.1;
+			ray_y += ray_dir_y * 0.1;
+		}
+	}
+	//float r_x = cub->x_p;
+
+	//while (cub->map[(int)cub->y_p][(int)r_x] != '1')
+	//{
+	//	//printf("Ray at %f, %f\n", r_x * 24, cub->y_p * 24);
+	//	//printf("Player at %f, %f\n", cub->x_p * 10, cub->y_p * 10);
+	//	//print_cub((int)cub->y_p * 24, r * 24, 0x0000FF00, 10);
+	//	mlx_put_pixel(image, r_x * 24, cub->y_p * 24, 0x0000FF00);
+	//	r_x += 0.10;
+	//}
+	//float	r_y = cub->y_p;
+	//while (cub->map[(int)r_y][(int)cub->x_p] != '1')
+	//{
+	//	//printf("Ray at %f, %f\n", cub->x_p * 24, r_y * 24);
+	//	//printf("Player at %f, %f\n", cub->x_p * 10, cub->y_p * 10);
+	//	//print_cub(r * 24, (int)cub->x_p * 24, 0x0000FF00, 10);
+	//	mlx_put_pixel(image, cub->x_p * 24, r_y * 24, 0x0000FF00);
+	//	r_y += 0.10;
+	//}
+}
+
 void	put_color(void *cub1)
 {
 	int		x;
@@ -121,13 +167,13 @@ void	put_color(void *cub1)
 			{
 			}
 			if (cub->map[y][x] == '1')
-				print_cub(j, i, cub->textcol->f);
+				print_cub(j, i, cub->textcol->f, SCALING_SIZE);
 			if (cub->map[y][x] == 'x' || cub->map[y][x] == '0')
-				print_cub(j, i, cub->textcol->c);
+				print_cub(j, i, cub->textcol->c, SCALING_SIZE);
 			if (is_player(cub->map[y][x]))
 			{
 				cub->map[y][x] = '0';
-				print_cub(j, i, cub->textcol->c);
+				print_cub(j, i, cub->textcol->c, SCALING_SIZE);
 			}
 			i = i + 24;
 			x++;
@@ -138,6 +184,7 @@ void	put_color(void *cub1)
 		y++;
 	}
 	print_player(cub);
+	put_rays(cub);
 }
 
 int	show_map(t_cub *cub)

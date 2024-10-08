@@ -6,7 +6,7 @@
 /*   By: hclaude <hclaude@student.42mulhouse.fr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/27 16:37:41 by hclaude           #+#    #+#             */
-/*   Updated: 2024/10/07 18:04:00 by hclaude          ###   ########.fr       */
+/*   Updated: 2024/10/08 14:56:38 by hclaude          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,6 +71,22 @@ int	is_multiple_player(t_cub *cub)
 	return (0);
 }
 
+float	get_dir(t_cub *cub)
+{
+	char	player;
+
+	player = cub->map[(int)cub->y_p][(int)cub->x_p];
+	if (player == 'N')
+		return (M_PI / 2);
+	if (player == 'S')
+		return (3 * M_PI / 2);
+	if (player == 'E')
+		return (0);
+	if (player == 'W')
+		return (M_PI);
+	return (-1);
+}
+
 int	check_map(t_cub *cub)
 {
 	if (is_multiple_player(cub))
@@ -79,6 +95,7 @@ int	check_map(t_cub *cub)
 		return ((void)printf("Error\nThere is a wrong character\n"), 1);
 	if (flood_fill(cub->map, cub->y_p, cub->x_p))
 		return ((void)printf("Error\nThere is a big hole in the map\n"), 1);
+	cub->dir_p = get_dir(cub);
 	return (0);
 }
 
