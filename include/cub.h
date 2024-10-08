@@ -6,7 +6,7 @@
 /*   By: hclaude <hclaude@student.42mulhouse.fr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/27 14:47:24 by hclaude           #+#    #+#             */
-/*   Updated: 2024/10/08 16:01:55 by hclaude          ###   ########.fr       */
+/*   Updated: 2024/10/08 16:59:42 by hclaude          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,9 @@
 # include "../MLX42/include/MLX42/MLX42.h"
 
 # define SCALING_SIZE 24
+# define FOV 75
+# define WIDTH 2880
+# define HEIGHT 1620
 
 typedef enum e_data_type
 {
