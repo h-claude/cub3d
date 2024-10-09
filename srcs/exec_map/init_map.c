@@ -6,7 +6,7 @@
 /*   By: hclaude <hclaude@student.42mulhouse.fr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/01 23:59:19 by hclaude           #+#    #+#             */
-/*   Updated: 2024/10/08 19:12:15 by hclaude          ###   ########.fr       */
+/*   Updated: 2024/10/09 22:21:21 by hclaude          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,7 @@ int	player_can_reach(float y, float x, t_cub *cub)
 	//printf("Player at %f, %f\n", y, x);
 	//printf("Player at %d, %d\n", y1, x1);
 	//printf("Player at %d, %d\n", y2, x2);
-	if (cub->map[y1][x1] == '1' || cub->map[y1][x2] == '1' || cub->map[y2][x1] == '1' || cub->map[y2][x2] == '1')
+	if (cub->map[y1][x1] == '1'/* || cub->map[y1][x2] == '1' || cub->map[y2][x1] == '1' || cub->map[y2][x2] == '1'*/)
 		return (0);
 	else
 		return (1);
@@ -43,28 +43,51 @@ int	player_can_reach(float y, float x, t_cub *cub)
 void	input(void *cub1)
 {
 	t_cub	*cub = (t_cub *)cub1;
+	float	new_x;
+	float	new_y;
+	float	move_speed = 0.05;
 
 	if (mlx_is_key_down(mlx, MLX_KEY_ESCAPE))
 		exit(0); // faut faire ca bien
-	if (mlx_is_key_down(mlx, MLX_KEY_W))
-	{
-		if (player_can_reach(cub->y_p - 0.05, cub->x_p, cub))
-			cub->y_p -= 0.05;
-	}
-	if (mlx_is_key_down(mlx, MLX_KEY_S))
-	{
-		if (player_can_reach(cub->y_p + 0.05, cub->x_p, cub))
-			cub->y_p += 0.05;
-	}
 	if (mlx_is_key_down(mlx, MLX_KEY_A))
 	{
-		if (player_can_reach(cub->y_p, cub->x_p - 0.05, cub))
-			cub->x_p -= 0.05;
+		new_x = cub->x_p + cos(cub->dir_p) * move_speed;
+		new_y = cub->y_p + sin(cub->dir_p) * move_speed;
+		if (player_can_reach(new_y, new_x, cub))
+		{
+			cub->x_p = new_x;
+			cub->y_p = new_y;
+		}
 	}
 	if (mlx_is_key_down(mlx, MLX_KEY_D))
 	{
-		if (player_can_reach(cub->y_p, cub->x_p + 0.05, cub))
-			cub->x_p += 0.05;
+		new_x = cub->x_p - cos(cub->dir_p) * move_speed;
+		new_y = cub->y_p - sin(cub->dir_p) * move_speed;
+		if (player_can_reach(new_y, new_x, cub))
+		{
+			cub->x_p = new_x;
+			cub->y_p = new_y;
+		}
+	}
+	if (mlx_is_key_down(mlx, MLX_KEY_W))
+	{
+		new_x = cub->x_p + cos(cub->dir_p + M_PI / 2) * move_speed;
+		new_y = cub->y_p + sin(cub->dir_p + M_PI / 2) * move_speed;
+		if (player_can_reach(new_y, new_x, cub))
+		{
+			cub->x_p = new_x;
+			cub->y_p = new_y;
+		}
+	}
+	if (mlx_is_key_down(mlx, MLX_KEY_S))
+	{
+		new_x = cub->x_p + cos(cub->dir_p - M_PI / 2) * move_speed;
+		new_y = cub->y_p + sin(cub->dir_p - M_PI / 2) * move_speed;
+		if (player_can_reach(new_y, new_x, cub))
+		{
+			cub->x_p = new_x;
+			cub->y_p = new_y;
+		}
 	}
 	if (mlx_is_key_down(mlx, MLX_KEY_LEFT))
 		cub->dir_p -= 0.05;
@@ -94,36 +117,71 @@ float	get_distance(float x1, float y1, float x2, float y2)
 	return (sqrt(pow(x2 - x1, 2) + pow(y2 - y1, 2)));
 }
 
-void	put_wall(float	distance, float angle)
+uint32_t color_dist(uint32_t color, float distance)
 {
-	float	wall_height = 1500 / distance;
-	float	wall_top = (1000 / 2) - wall_height / 2;
-	float	wall_bottom = (1000 / 2) + wall_height / 2;
-	uint32_t	wall_color = 0xFF001B + distance;
-	int		x = angle * 1000 / FOV;
-	float	wall_width = x + 15;
-	int		y = wall_top;
+	uint8_t r = (color & 0xFF0000) >> 16;
+	uint8_t g = (color & 0x00FF00) >> 8;
+	uint8_t b = (color & 0x0000FF);
+	r = r / (distance);
+	g = g / (distance);
+	b = b / (distance);
+	return (r << 16 | g << 8 | b);
+}
 
-	printf("Distance: %f\n", distance);
-	printf("Wall height: %f\n", wall_height);
-	printf("Wall top: %f\n", wall_top);
-	printf("Wall bottom: %f\n", wall_bottom);
-	printf("Wall width: %f\n", wall_width);
-	printf("X: %d\n", x);
-	printf("Y: %d\n", y);
+void	put_wall(float	distance, float angle, t_cub *cub)
+{
+	uint32_t	wall_color = 0x00BB00;
+	wall_color = color_dist(wall_color, distance);
+	float		wall_height = HEIGHT / distance;
+	float		wall_top = (HEIGHT / 2) - wall_height / 2;
+	float		wall_bottom = (HEIGHT / 2) + wall_height / 2;
+	int			x = angle * WIDTH / FOV;
+	float		wall_width = x + 20;
+	int			y = wall_top;
 
-	while (x < wall_width)
+	//printf("Distance: %f\n", distance);
+	//printf("Wall height: %f\n", wall_height);
+	//printf("Wall top: %f\n", wall_top);
+	//printf("Wall bottom: %f\n", wall_bottom);
+	//printf("Wall width: %f\n", wall_width);
+	//printf("Color: %x\n", wall_color);
+	//printf("X: %d\n", x);
+	//printf("Y: %d\n", y);
+	while (x <= wall_width)
 	{
-		while (y < wall_bottom)
+		while (y < wall_top)
 		{
-			if (x > 0 && y > 0 && x < 1500 && y < 1500 && y > wall_top && y < wall_bottom)
-				mlx_put_pixel(r_image, x, y, wall_color);
+			mlx_put_pixel(r_image, x, y, cub->textcol->f);
 			y++;
 		}
 		y = 0;
 		x++;
 	}
-
+	x = angle * WIDTH / FOV;
+	y = wall_top;
+	while (x < wall_width)
+	{
+		while (y < wall_bottom)
+		{
+			if (x > 0 && y > 0 && x < WIDTH && y < HEIGHT && y > wall_top && y < wall_bottom)
+				mlx_put_pixel(r_image, x, y, (wall_color << 8) + 0xFF);
+			y++;
+		}
+		y = 0;
+		x++;
+	}
+	x= angle * WIDTH / FOV;
+	y = wall_bottom;
+	while (x < wall_width)
+	{
+		while (y < HEIGHT)
+		{
+			mlx_put_pixel(r_image, x, y, cub->textcol->c);
+			y++;
+		}
+		x++;
+		y = wall_bottom;
+	}
 }
 
 void	put_rays(t_cub *cub)
@@ -142,14 +200,15 @@ void	put_rays(t_cub *cub)
 		ray_dir_x = cos(ray_angle);
 		ray_x = cub->x_p;
 		ray_y = cub->y_p;
-		angle++;
 		while (cub->map[(int)ray_y][(int)ray_x] != '1' && (get_distance(cub->x_p, cub->y_p, ray_x, ray_y)) < 10)
 		{
-			mlx_put_pixel(image, (ray_x * SCALING_SIZE), (ray_y * SCALING_SIZE), 0x0000FFFF);
-			ray_x += ray_dir_x * 0.1;
-			ray_y += ray_dir_y * 0.1;
+			//mlx_put_pixel(image, (ray_x * SCALING_SIZE), (ray_y * SCALING_SIZE), 0x0000FFFF);
+			ray_x += ray_dir_x * 0.005;
+			ray_y += ray_dir_y * 0.005;
 		}
-		put_wall(get_distance(cub->x_p, cub->y_p, ray_x, ray_y), angle);
+		float distance = get_distance(cub->x_p, cub->y_p, ray_x, ray_y);
+		put_wall(distance, angle, cub);
+		angle++;
 	}
 }
 
@@ -171,13 +230,13 @@ void	put_color(void *cub1)
 			{
 			}
 			if (cub->map[y][x] == '1')
-				print_cub(j, i, cub->textcol->f, SCALING_SIZE);
+				//print_cub(j, i, cub->textcol->f, SCALING_SIZE);
 			if (cub->map[y][x] == 'x' || cub->map[y][x] == '0')
-				print_cub(j, i, cub->textcol->c, SCALING_SIZE);
+				//print_cub(j, i, cub->textcol->c, SCALING_SIZE);
 			if (is_player(cub->map[y][x]))
 			{
 				cub->map[y][x] = '0';
-				print_cub(j, i, cub->textcol->c, SCALING_SIZE);
+				//print_cub(j, i, cub->textcol->c, SCALING_SIZE);
 			}
 			i = i + 24;
 			x++;
@@ -187,12 +246,12 @@ void	put_color(void *cub1)
 		j = j + 24;
 		y++;
 	}
-	print_cub(cub->y_p * 24, cub->x_p * 24, 0x00FF0000, 10);
+	//print_cub(cub->y_p * 24, cub->x_p * 24, 0x00FF0000, 10);
 	int x_f = 0;
 	int y_f = 0;
-	while (y_f < 1000)
+	while (y_f < HEIGHT)
 	{
-		while (x_f < 1000)
+		while (x_f < WIDTH)
 		{
 			mlx_put_pixel(r_image, x_f, y_f, 0x000000);
 			x_f++;
@@ -207,15 +266,14 @@ int	show_map(t_cub *cub)
 {
 	(void)r_image;
 
-	mlx = mlx_init(WIDTH, HEIGHT, "MINIMAP", false);
-	image = mlx_new_image(mlx, 1000, 1000);
-	mlx_image_to_window(mlx, image, 0, 1300);
-	mlx_set_instance_depth(image->instances, 1);
+	mlx = mlx_init(WIDTH, HEIGHT, "THIS IS CUB3D YEAAAAAAAAAAAAAAAAAH", false);
+	//image = mlx_new_image(mlx, 500, 500);
+	//mlx_image_to_window(mlx, image, 0, 1100);
+	//mlx_set_instance_depth(image->instances, 1);
 
-	printf("\nETESA\n");
-	r_image = mlx_new_image(mlx, 1000, 1000);
+	r_image = mlx_new_image(mlx, WIDTH, HEIGHT);
 	mlx_image_to_window(mlx, r_image, 0, 0);
-	mlx_set_instance_depth(r_image->instances, 2);
+	//mlx_set_instance_depth(r_image->instances, 2);
 	mlx_loop_hook(mlx, put_color, cub);
 	mlx_loop_hook(mlx, input, cub);
 	mlx_loop(mlx);
