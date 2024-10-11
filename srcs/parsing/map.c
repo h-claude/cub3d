@@ -6,7 +6,7 @@
 /*   By: hclaude <hclaude@student.42mulhouse.fr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/30 16:31:26 by hclaude           #+#    #+#             */
-/*   Updated: 2024/10/07 18:05:13 by hclaude          ###   ########.fr       */
+/*   Updated: 2024/10/11 15:56:42 by hclaude          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -105,6 +105,8 @@ int	parse_map(t_cub *cub)
 			if (lst_add_node(lst, str))
 				return (free_lst(&lst), printf("Error\nFailed malloc\n"), 1);
 		}
+		// if (*str == '\n')
+		// 	return (free_lst(&lst), free(str), 1);
 		free(str);
 		str = get_next_line(cub->fd);
 	}

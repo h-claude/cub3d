@@ -6,7 +6,7 @@
 /*   By: hclaude <hclaude@student.42mulhouse.fr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/01 23:59:19 by hclaude           #+#    #+#             */
-/*   Updated: 2024/10/09 22:21:21 by hclaude          ###   ########.fr       */
+/*   Updated: 2024/10/11 16:48:13 by hclaude          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -122,32 +122,39 @@ uint32_t color_dist(uint32_t color, float distance)
 	uint8_t r = (color & 0xFF0000) >> 16;
 	uint8_t g = (color & 0x00FF00) >> 8;
 	uint8_t b = (color & 0x0000FF);
-	r = r / (distance);
-	g = g / (distance);
-	b = b / (distance);
+
+	if (distance < 1)  // On évite de diviser par 0 en utilisant un seuil proche de 0
+        distance = 1;
+	r = r / distance;
+	g = g / distance;
+	b = b / distance;
 	return (r << 16 | g << 8 | b);
 }
 
 void	put_wall(float	distance, float angle, t_cub *cub)
 {
+	if (distance > 15)
+		distance = 15;
+	if (distance < 0.5)
+		distance = 0.5;
 	uint32_t	wall_color = 0x00BB00;
 	wall_color = color_dist(wall_color, distance);
 	float		wall_height = HEIGHT / distance;
 	float		wall_top = (HEIGHT / 2) - wall_height / 2;
 	float		wall_bottom = (HEIGHT / 2) + wall_height / 2;
 	int			x = angle * WIDTH / FOV;
-	float		wall_width = x + 20;
+	float		wall_width = x + 8;
 	int			y = wall_top;
 
-	//printf("Distance: %f\n", distance);
-	//printf("Wall height: %f\n", wall_height);
-	//printf("Wall top: %f\n", wall_top);
-	//printf("Wall bottom: %f\n", wall_bottom);
-	//printf("Wall width: %f\n", wall_width);
-	//printf("Color: %x\n", wall_color);
-	//printf("X: %d\n", x);
-	//printf("Y: %d\n", y);
-	while (x <= wall_width)
+	// printf("Distance: %f\n", distance);
+	// printf("Wall height: %f\n", wall_height);
+	// printf("Wall top: %f\n", wall_top);
+	// printf("Wall bottom: %f\n", wall_bottom);
+	// printf("Wall width: %f\n", wall_width);
+	// printf("Color: %x\n", wall_color);
+	// printf("X: %d\n", x);
+	// printf("Y: %d\n", y);
+	while (x < wall_width && x < WIDTH)
 	{
 		while (y < wall_top)
 		{
@@ -159,7 +166,7 @@ void	put_wall(float	distance, float angle, t_cub *cub)
 	}
 	x = angle * WIDTH / FOV;
 	y = wall_top;
-	while (x < wall_width)
+	while (x < wall_width && x < WIDTH)
 	{
 		while (y < wall_bottom)
 		{
@@ -170,9 +177,9 @@ void	put_wall(float	distance, float angle, t_cub *cub)
 		y = 0;
 		x++;
 	}
-	x= angle * WIDTH / FOV;
+	x = angle * WIDTH / FOV;
 	y = wall_bottom;
-	while (x < wall_width)
+	while (x < wall_width && x < WIDTH)
 	{
 		while (y < HEIGHT)
 		{
@@ -186,7 +193,7 @@ void	put_wall(float	distance, float angle, t_cub *cub)
 
 void	put_rays(t_cub *cub)
 {
-	int		angle = 0;
+	float	angle = 0;
 	float	ray_angle = 0;
 	float	ray_x = cub->x_p;
 	float	ray_y = cub->y_p;
@@ -195,20 +202,24 @@ void	put_rays(t_cub *cub)
 
 	while (angle < FOV)
 	{
-		ray_angle = cub->dir_p + angle * (M_PI / 180);
+		ray_angle = cub->dir_p + (angle - (FOV / 2)) * (M_PI / 180);
 		ray_dir_y = sin(ray_angle);
 		ray_dir_x = cos(ray_angle);
 		ray_x = cub->x_p;
 		ray_y = cub->y_p;
-		while (cub->map[(int)ray_y][(int)ray_x] != '1' && (get_distance(cub->x_p, cub->y_p, ray_x, ray_y)) < 10)
+		while (cub->map[(int)ray_y][(int)ray_x] != '1' && (get_distance(cub->x_p, cub->y_p, ray_x, ray_y)) < 15)
 		{
 			//mlx_put_pixel(image, (ray_x * SCALING_SIZE), (ray_y * SCALING_SIZE), 0x0000FFFF);
 			ray_x += ray_dir_x * 0.005;
 			ray_y += ray_dir_y * 0.005;
 		}
-		float distance = get_distance(cub->x_p, cub->y_p, ray_x, ray_y);
+		float	distance = get_distance(cub->x_p, cub->y_p, ray_x, ray_y);
+		if (distance < 1)
+			distance = 1;
+		distance *= fabs(cos(ray_angle - cub->dir_p));
+		// printf("distance = %f, raw_distance = %f, ray_angle = %f et cub->dir_p = %f\n", distance, get_distance(cub->x_p, cub->y_p, ray_x, ray_y), ray_angle, cub->dir_p);
 		put_wall(distance, angle, cub);
-		angle++;
+		angle += 0.2;
 	}
 }
 
@@ -264,13 +275,25 @@ void	put_color(void *cub1)
 
 int	show_map(t_cub *cub)
 {
-	(void)r_image;
+	mlx_texture_t	*texture;
 
 	mlx = mlx_init(WIDTH, HEIGHT, "THIS IS CUB3D YEAAAAAAAAAAAAAAAAAH", false);
 	//image = mlx_new_image(mlx, 500, 500);
 	//mlx_image_to_window(mlx, image, 0, 1100);
 	//mlx_set_instance_depth(image->instances, 1);
 
+	// le nom de la changera en fonction de l'angle vers lequel on regarde
+
+	texture = mlx_load_png("maps/textures/coconut_NORTH.png");
+	printf("\ndimensions: %d, %d\n", texture->width, texture->height);
+	// printf("ONE ELEMENT: %d\n", texture->pixels[453]);
+	// for (uint32_t i = 0; i < texture->width; i++)
+	// {
+	// 	for (uint32_t j = 0; j < texture->height; j++)
+	// 	{
+	// 		printf("%d", texture->pixels[i+j]);
+	// 	}
+	// }
 	r_image = mlx_new_image(mlx, WIDTH, HEIGHT);
 	mlx_image_to_window(mlx, r_image, 0, 0);
 	//mlx_set_instance_depth(r_image->instances, 2);
