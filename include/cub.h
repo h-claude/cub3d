@@ -6,7 +6,7 @@
 /*   By: hclaude <hclaude@student.42mulhouse.fr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/27 14:47:24 by hclaude           #+#    #+#             */
-/*   Updated: 2024/10/11 15:29:18 by hclaude          ###   ########.fr       */
+/*   Updated: 2024/10/14 14:54:10 by hclaude          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,6 +42,10 @@ typedef struct s_textcol
 	char	*so;
 	char	*we;
 	char	*ea;
+	mlx_texture_t	*t_no;
+	mlx_texture_t	*t_so;
+	mlx_texture_t	*t_we;
+	mlx_texture_t	*t_ea;
 	int32_t	f;
 	int32_t	c;
 }	t_textcol;

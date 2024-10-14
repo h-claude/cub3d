@@ -6,7 +6,7 @@
 /*   By: hclaude <hclaude@student.42mulhouse.fr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/01 23:59:19 by hclaude           #+#    #+#             */
-/*   Updated: 2024/10/11 16:48:13 by hclaude          ###   ########.fr       */
+/*   Updated: 2024/10/14 15:16:41 by hclaude          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,7 +49,7 @@ void	input(void *cub1)
 
 	if (mlx_is_key_down(mlx, MLX_KEY_ESCAPE))
 		exit(0); // faut faire ca bien
-	if (mlx_is_key_down(mlx, MLX_KEY_A))
+	if (mlx_is_key_down(mlx, MLX_KEY_W))
 	{
 		new_x = cub->x_p + cos(cub->dir_p) * move_speed;
 		new_y = cub->y_p + sin(cub->dir_p) * move_speed;
@@ -59,7 +59,7 @@ void	input(void *cub1)
 			cub->y_p = new_y;
 		}
 	}
-	if (mlx_is_key_down(mlx, MLX_KEY_D))
+	if (mlx_is_key_down(mlx, MLX_KEY_S))
 	{
 		new_x = cub->x_p - cos(cub->dir_p) * move_speed;
 		new_y = cub->y_p - sin(cub->dir_p) * move_speed;
@@ -69,7 +69,7 @@ void	input(void *cub1)
 			cub->y_p = new_y;
 		}
 	}
-	if (mlx_is_key_down(mlx, MLX_KEY_W))
+	if (mlx_is_key_down(mlx, MLX_KEY_D))
 	{
 		new_x = cub->x_p + cos(cub->dir_p + M_PI / 2) * move_speed;
 		new_y = cub->y_p + sin(cub->dir_p + M_PI / 2) * move_speed;
@@ -79,7 +79,7 @@ void	input(void *cub1)
 			cub->y_p = new_y;
 		}
 	}
-	if (mlx_is_key_down(mlx, MLX_KEY_S))
+	if (mlx_is_key_down(mlx, MLX_KEY_A))
 	{
 		new_x = cub->x_p + cos(cub->dir_p - M_PI / 2) * move_speed;
 		new_y = cub->y_p + sin(cub->dir_p - M_PI / 2) * move_speed;
@@ -133,18 +133,18 @@ uint32_t color_dist(uint32_t color, float distance)
 
 void	put_wall(float	distance, float angle, t_cub *cub)
 {
-	if (distance > 15)
-		distance = 15;
+	if (distance > 10)
+		distance = 10;
 	if (distance < 0.5)
 		distance = 0.5;
+
 	uint32_t	wall_color = 0x00BB00;
 	wall_color = color_dist(wall_color, distance);
 	float		wall_height = HEIGHT / distance;
 	float		wall_top = (HEIGHT / 2) - wall_height / 2;
 	float		wall_bottom = (HEIGHT / 2) + wall_height / 2;
 	int			x = angle * WIDTH / FOV;
-	float		wall_width = x + 8;
-	int			y = wall_top;
+	int			y = 0;
 
 	// printf("Distance: %f\n", distance);
 	// printf("Wall height: %f\n", wall_height);
@@ -154,41 +154,27 @@ void	put_wall(float	distance, float angle, t_cub *cub)
 	// printf("Color: %x\n", wall_color);
 	// printf("X: %d\n", x);
 	// printf("Y: %d\n", y);
-	while (x < wall_width && x < WIDTH)
+
+	while (y < wall_top)
 	{
-		while (y < wall_top)
-		{
-			mlx_put_pixel(r_image, x, y, cub->textcol->f);
-			y++;
-		}
-		y = 0;
-		x++;
+		mlx_put_pixel(r_image, x, y, cub->textcol->f);
+		y++;
 	}
-	x = angle * WIDTH / FOV;
 	y = wall_top;
-	while (x < wall_width && x < WIDTH)
+	while (y < wall_bottom)
 	{
-		while (y < wall_bottom)
-		{
-			if (x > 0 && y > 0 && x < WIDTH && y < HEIGHT && y > wall_top && y < wall_bottom)
-				mlx_put_pixel(r_image, x, y, (wall_color << 8) + 0xFF);
-			y++;
-		}
-		y = 0;
-		x++;
+		if (x > 0 && y > 0 && x < WIDTH && y < HEIGHT && y > wall_top && y < wall_bottom)
+			mlx_put_pixel(r_image, x, y, (wall_color << 8) + 0xFF);
+		y++;
 	}
-	x = angle * WIDTH / FOV;
 	y = wall_bottom;
-	while (x < wall_width && x < WIDTH)
+	while (y < HEIGHT)
 	{
-		while (y < HEIGHT)
-		{
-			mlx_put_pixel(r_image, x, y, cub->textcol->c);
-			y++;
-		}
-		x++;
-		y = wall_bottom;
+		mlx_put_pixel(r_image, x, y, cub->textcol->c);
+		y++;
 	}
+	x++;
+	y = wall_bottom;
 }
 
 void	put_rays(t_cub *cub)
@@ -207,19 +193,18 @@ void	put_rays(t_cub *cub)
 		ray_dir_x = cos(ray_angle);
 		ray_x = cub->x_p;
 		ray_y = cub->y_p;
-		while (cub->map[(int)ray_y][(int)ray_x] != '1' && (get_distance(cub->x_p, cub->y_p, ray_x, ray_y)) < 15)
+		while (cub->map[(int)ray_y][(int)ray_x] != '1' && (get_distance(cub->x_p, cub->y_p, ray_x, ray_y)) < 10)
 		{
 			//mlx_put_pixel(image, (ray_x * SCALING_SIZE), (ray_y * SCALING_SIZE), 0x0000FFFF);
-			ray_x += ray_dir_x * 0.005;
-			ray_y += ray_dir_y * 0.005;
+			ray_x += ray_dir_x * 0.01;
+			ray_y += ray_dir_y * 0.01;
 		}
 		float	distance = get_distance(cub->x_p, cub->y_p, ray_x, ray_y);
 		if (distance < 1)
 			distance = 1;
 		distance *= fabs(cos(ray_angle - cub->dir_p));
-		// printf("distance = %f, raw_distance = %f, ray_angle = %f et cub->dir_p = %f\n", distance, get_distance(cub->x_p, cub->y_p, ray_x, ray_y), ray_angle, cub->dir_p);
 		put_wall(distance, angle, cub);
-		angle += 0.2;
+		angle += 0.03;
 	}
 }
 
@@ -273,30 +258,33 @@ void	put_color(void *cub1)
 	put_rays(cub);
 }
 
+int	load_textures(t_cub *cub)
+{
+	cub->textcol->t_no = mlx_load_png(cub->textcol->no);
+	if (!cub->textcol->t_no)
+		return (1);
+	cub->textcol->t_so = mlx_load_png(cub->textcol->so);
+	if (!cub->textcol->t_so)
+		return (mlx_delete_texture(cub->textcol->t_no), 1);
+	cub->textcol->t_we = mlx_load_png(cub->textcol->we);
+	if (!cub->textcol->t_we)
+		return (mlx_delete_texture(cub->textcol->t_no), \
+			mlx_delete_texture(cub->textcol->t_so), 1);
+	cub->textcol->t_ea = mlx_load_png(cub->textcol->ea);
+	if (!cub->textcol->t_ea)
+		return (mlx_delete_texture(cub->textcol->t_no), \
+				mlx_delete_texture(cub->textcol->t_so), \
+				mlx_delete_texture(cub->textcol->t_we), 1);
+	return (0);
+}
+
 int	show_map(t_cub *cub)
 {
-	mlx_texture_t	*texture;
-
 	mlx = mlx_init(WIDTH, HEIGHT, "THIS IS CUB3D YEAAAAAAAAAAAAAAAAAH", false);
-	//image = mlx_new_image(mlx, 500, 500);
-	//mlx_image_to_window(mlx, image, 0, 1100);
-	//mlx_set_instance_depth(image->instances, 1);
-
-	// le nom de la changera en fonction de l'angle vers lequel on regarde
-
-	texture = mlx_load_png("maps/textures/coconut_NORTH.png");
-	printf("\ndimensions: %d, %d\n", texture->width, texture->height);
-	// printf("ONE ELEMENT: %d\n", texture->pixels[453]);
-	// for (uint32_t i = 0; i < texture->width; i++)
-	// {
-	// 	for (uint32_t j = 0; j < texture->height; j++)
-	// 	{
-	// 		printf("%d", texture->pixels[i+j]);
-	// 	}
-	// }
+	printf("\ncolor %x\n", cub->textcol->f);
+	printf("color %x\n", cub->textcol->c);
 	r_image = mlx_new_image(mlx, WIDTH, HEIGHT);
 	mlx_image_to_window(mlx, r_image, 0, 0);
-	//mlx_set_instance_depth(r_image->instances, 2);
 	mlx_loop_hook(mlx, put_color, cub);
 	mlx_loop_hook(mlx, input, cub);
 	mlx_loop(mlx);
