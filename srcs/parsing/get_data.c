@@ -6,7 +6,7 @@
 /*   By: hclaude <hclaude@student.42mulhouse.fr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/30 13:22:15 by hclaude           #+#    #+#             */
-/*   Updated: 2024/10/07 18:06:43 by hclaude          ###   ########.fr       */
+/*   Updated: 2024/10/14 17:33:33 by hclaude          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -124,13 +124,13 @@ int	put_data(char *str, t_cub *cub, t_data_type type)
 	if (check_dup_data(cub, type))
 		return (1);
 	if (type == NORTH)
-		cub->textcol->no = ft_strdup(str);
+		cub->textcol->no = ft_strtrim(str, "\n");
 	else if (type == SOUTH)
-		cub->textcol->so = ft_strdup(str);
+		cub->textcol->so = ft_strtrim(str, "\n");
 	else if (type == WEST)
-		cub->textcol->we = ft_strdup(str);
+		cub->textcol->we = ft_strtrim(str, "\n");
 	else if (type == EAST)
-		cub->textcol->ea = ft_strdup(str);
+		cub->textcol->ea = ft_strtrim(str, "\n");
 	else if (type == FLOOR)
 		cub->textcol->f = convert_int(str);
 	else if (type == CEILING)

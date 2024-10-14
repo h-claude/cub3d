@@ -6,7 +6,7 @@
 /*   By: hclaude <hclaude@student.42mulhouse.fr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/01 23:59:19 by hclaude           #+#    #+#             */
-/*   Updated: 2024/10/14 15:16:41 by hclaude          ###   ########.fr       */
+/*   Updated: 2024/10/14 17:28:24 by hclaude          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -131,6 +131,34 @@ uint32_t color_dist(uint32_t color, float distance)
 	return (r << 16 | g << 8 | b);
 }
 
+int32_t	get_text_color(t_cub *cub, float angle, int y, float distance)
+{
+	uint8_t			color;
+	int				te_x;
+	int				te_y;
+	mlx_texture_t	*text;
+
+	(void)distance;
+	if (angle < 0)
+		angle += 2 * M_PI;
+	if (angle > 2 * M_PI)
+		angle -= 2 * M_PI;
+	if (angle >= 0 && angle < M_PI / 2) // NORD
+		text = cub->textcol->t_no;
+	else if (angle >= M_PI / 2 && angle < M_PI) // OUEST
+		text = cub->textcol->t_we;
+	else if (angle >= M_PI && angle < 3 * M_PI / 2) // SUD
+		text = cub->textcol->t_so;
+	else if (angle >= 3 * M_PI / 2 && angle < 2 * M_PI) // EST
+		text = cub->textcol->t_ea;
+	else
+		return (0);
+	te_x = angle * text->width / (2 * M_PI);
+	te_y =  y * text->height / (HEIGHT / 2);
+	color = text->pixels[(te_x + te_y) * sizeof(int32_t)];
+	return (color);
+}
+
 void	put_wall(float	distance, float angle, t_cub *cub)
 {
 	if (distance > 10)
@@ -164,7 +192,7 @@ void	put_wall(float	distance, float angle, t_cub *cub)
 	while (y < wall_bottom)
 	{
 		if (x > 0 && y > 0 && x < WIDTH && y < HEIGHT && y > wall_top && y < wall_bottom)
-			mlx_put_pixel(r_image, x, y, (wall_color << 8) + 0xFF);
+			mlx_put_pixel(r_image, x, y, get_text_color(cub, angle, y, distance) << 8 | 0xFF);
 		y++;
 	}
 	y = wall_bottom;
@@ -208,6 +236,25 @@ void	put_rays(t_cub *cub)
 	}
 }
 
+void	set_window_name(float dir_p)
+{
+	char	*name;
+
+	if (dir_p < 0)
+		dir_p += 2 * M_PI;
+	if (dir_p > 2 * M_PI)
+		dir_p -= 2 * M_PI;
+	if (dir_p >= 0 && dir_p < M_PI / 2)
+		name = "EAST";
+	else if (dir_p >= M_PI / 2 && dir_p < M_PI)
+		name = "SOUTH";
+	else if (dir_p >= M_PI && dir_p < 3 * M_PI / 2)
+		name = "WEST";
+	else if (dir_p >= 3 * M_PI / 2 && dir_p < 2 * M_PI)
+		name = "NORTH";
+	mlx_set_window_title(mlx, name);
+}
+
 void	put_color(void *cub1)
 {
 	int		x;
@@ -218,6 +265,7 @@ void	put_color(void *cub1)
 
 	x = 0, y = 0;
 	cub = (t_cub *)cub1;
+	set_window_name(cub->dir_p);
 	while (cub->map[y])
 	{
 		while (cub->map[y][x])
@@ -280,9 +328,9 @@ int	load_textures(t_cub *cub)
 
 int	show_map(t_cub *cub)
 {
+	if (load_textures(cub))
+		return ((void)printf("ERROR\n"), 1);
 	mlx = mlx_init(WIDTH, HEIGHT, "THIS IS CUB3D YEAAAAAAAAAAAAAAAAAH", false);
-	printf("\ncolor %x\n", cub->textcol->f);
-	printf("color %x\n", cub->textcol->c);
 	r_image = mlx_new_image(mlx, WIDTH, HEIGHT);
 	mlx_image_to_window(mlx, r_image, 0, 0);
 	mlx_loop_hook(mlx, put_color, cub);
