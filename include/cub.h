@@ -6,7 +6,7 @@
 /*   By: hclaude <hclaude@student.42mulhouse.fr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/27 14:47:24 by hclaude           #+#    #+#             */
-/*   Updated: 2024/10/14 14:54:10 by hclaude          ###   ########.fr       */
+/*   Updated: 2024/10/15 23:14:29 by hclaude          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,6 +56,7 @@ typedef struct cub
 	float				x_p;
 	float				y_p;
 	float				dir_p;
+	bool				WE;
 	char				**map;
 	struct s_textcol 	*textcol;
 }	t_cub;

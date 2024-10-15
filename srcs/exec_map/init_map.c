@@ -6,7 +6,7 @@
 /*   By: hclaude <hclaude@student.42mulhouse.fr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/01 23:59:19 by hclaude           #+#    #+#             */
-/*   Updated: 2024/10/14 17:28:24 by hclaude          ###   ########.fr       */
+/*   Updated: 2024/10/16 00:40:21 by hclaude          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -123,86 +123,86 @@ uint32_t color_dist(uint32_t color, float distance)
 	uint8_t g = (color & 0x00FF00) >> 8;
 	uint8_t b = (color & 0x0000FF);
 
-	if (distance < 1)  // On évite de diviser par 0 en utilisant un seuil proche de 0
-        distance = 1;
 	r = r / distance;
 	g = g / distance;
 	b = b / distance;
 	return (r << 16 | g << 8 | b);
 }
 
-int32_t	get_text_color(t_cub *cub, float angle, int y, float distance)
+uint32_t	get_text_color(t_cub *cub, float y, float x, float wall_x)
 {
-	uint8_t			color;
-	int				te_x;
-	int				te_y;
 	mlx_texture_t	*text;
+	int				text_x;
+	int				text_y;
+	uint32_t		text_color;
 
-	(void)distance;
-	if (angle < 0)
-		angle += 2 * M_PI;
-	if (angle > 2 * M_PI)
-		angle -= 2 * M_PI;
-	if (angle >= 0 && angle < M_PI / 2) // NORD
-		text = cub->textcol->t_no;
-	else if (angle >= M_PI / 2 && angle < M_PI) // OUEST
-		text = cub->textcol->t_we;
-	else if (angle >= M_PI && angle < 3 * M_PI / 2) // SUD
-		text = cub->textcol->t_so;
-	else if (angle >= 3 * M_PI / 2 && angle < 2 * M_PI) // EST
-		text = cub->textcol->t_ea;
+	text = 0x000000;
+	if (cub->WE)
+	{
+		if (x < 0.0)
+			text = cub->textcol->t_we; // pour l'ouest
+		else
+			text = cub->textcol->t_ea; // pour l'est
+	}
 	else
-		return (0);
-	te_x = angle * text->width / (2 * M_PI);
-	te_y =  y * text->height / (HEIGHT / 2);
-	color = text->pixels[(te_x + te_y) * sizeof(int32_t)];
-	return (color);
+	{
+		if (y < 0.0)
+			text = cub->textcol->t_no; // pour le nord
+		else
+			text = cub->textcol->t_so; // pour le sud
+	}
+	text_x = (int)(wall_x * text->width) % text->width;
+	text_y = (int)(y - (int)y) * text->height % text->height;
+	text_color = *(uint32_t *)(text->pixels + (text_y * text->width + text_x) * text->bytes_per_pixel);
+	return (text_color);
 }
 
-void	put_wall(float	distance, float angle, t_cub *cub)
+void	put_wall(float	distance, float angle, float ray_x, float ray_y, t_cub *cub)
 {
+	uint32_t	wall_color;
 	if (distance > 10)
 		distance = 10;
-	if (distance < 0.5)
-		distance = 0.5;
-
-	uint32_t	wall_color = 0x00BB00;
-	wall_color = color_dist(wall_color, distance);
+	if (distance < 1)
+		distance = 1;
 	float		wall_height = HEIGHT / distance;
 	float		wall_top = (HEIGHT / 2) - wall_height / 2;
 	float		wall_bottom = (HEIGHT / 2) + wall_height / 2;
 	int			x = angle * WIDTH / FOV;
 	int			y = 0;
 
+	wall_color = color_dist(get_text_color(cub, ray_y, ray_x, x), distance);
 	// printf("Distance: %f\n", distance);
 	// printf("Wall height: %f\n", wall_height);
 	// printf("Wall top: %f\n", wall_top);
 	// printf("Wall bottom: %f\n", wall_bottom);
-	// printf("Wall width: %f\n", wall_width);
 	// printf("Color: %x\n", wall_color);
 	// printf("X: %d\n", x);
 	// printf("Y: %d\n", y);
-
-	while (y < wall_top)
+	while (x > 0 && x < WIDTH && y >= 0 && y < wall_top && y < HEIGHT)
 	{
 		mlx_put_pixel(r_image, x, y, cub->textcol->f);
 		y++;
 	}
-	y = wall_top;
 	while (y < wall_bottom)
 	{
 		if (x > 0 && y > 0 && x < WIDTH && y < HEIGHT && y > wall_top && y < wall_bottom)
-			mlx_put_pixel(r_image, x, y, get_text_color(cub, angle, y, distance) << 8 | 0xFF);
+			mlx_put_pixel(r_image, x, y, wall_color);
 		y++;
 	}
-	y = wall_bottom;
-	while (y < HEIGHT)
+	while (x > 0 && x < WIDTH && y > 0 && y < HEIGHT)
 	{
 		mlx_put_pixel(r_image, x, y, cub->textcol->c);
 		y++;
 	}
-	x++;
-	y = wall_bottom;
+}
+
+float	normalize_angle(float angle)
+{
+	if (angle < 0)
+		angle += 2 * M_PI;
+	if (angle > 2 * M_PI)
+		angle -= 2 * M_PI;
+	return (angle);
 }
 
 void	put_rays(t_cub *cub)
@@ -213,25 +213,38 @@ void	put_rays(t_cub *cub)
 	float	ray_y = cub->y_p;
 	float	ray_dir_x;
 	float	ray_dir_y;
+	bool	HIT_WALL = false;
 
 	while (angle < FOV)
 	{
+		cub->dir_p = normalize_angle(cub->dir_p);
 		ray_angle = cub->dir_p + (angle - (FOV / 2)) * (M_PI / 180);
 		ray_dir_y = sin(ray_angle);
 		ray_dir_x = cos(ray_angle);
 		ray_x = cub->x_p;
 		ray_y = cub->y_p;
-		while (cub->map[(int)ray_y][(int)ray_x] != '1' && (get_distance(cub->x_p, cub->y_p, ray_x, ray_y)) < 10)
+		HIT_WALL = false;
+		while (!HIT_WALL && (get_distance(cub->x_p, cub->y_p, ray_x, ray_y)) < 10)
 		{
 			//mlx_put_pixel(image, (ray_x * SCALING_SIZE), (ray_y * SCALING_SIZE), 0x0000FFFF);
 			ray_x += ray_dir_x * 0.01;
+			if (cub->map[(int)ray_y][(int)ray_x] == '1')
+			{
+				cub->WE = true;
+				HIT_WALL = true;
+			}
 			ray_y += ray_dir_y * 0.01;
+			if (!HIT_WALL && cub->map[(int)ray_y][(int)ray_x] == '1')
+			{
+				cub->WE = false;
+				HIT_WALL = true;
+			}
 		}
 		float	distance = get_distance(cub->x_p, cub->y_p, ray_x, ray_y);
 		if (distance < 1)
 			distance = 1;
 		distance *= fabs(cos(ray_angle - cub->dir_p));
-		put_wall(distance, angle, cub);
+		put_wall(distance, angle, ray_dir_x, ray_dir_y, cub);
 		angle += 0.03;
 	}
 }
@@ -310,19 +323,19 @@ int	load_textures(t_cub *cub)
 {
 	cub->textcol->t_no = mlx_load_png(cub->textcol->no);
 	if (!cub->textcol->t_no)
-		return (1);
+		return (printf("NO\n"), 1);
 	cub->textcol->t_so = mlx_load_png(cub->textcol->so);
 	if (!cub->textcol->t_so)
-		return (mlx_delete_texture(cub->textcol->t_no), 1);
+		return (mlx_delete_texture(cub->textcol->t_no), printf("SO\n"), 1);
 	cub->textcol->t_we = mlx_load_png(cub->textcol->we);
 	if (!cub->textcol->t_we)
 		return (mlx_delete_texture(cub->textcol->t_no), \
-			mlx_delete_texture(cub->textcol->t_so), 1);
+			mlx_delete_texture(cub->textcol->t_so), printf("WE\n"), 1);
 	cub->textcol->t_ea = mlx_load_png(cub->textcol->ea);
 	if (!cub->textcol->t_ea)
 		return (mlx_delete_texture(cub->textcol->t_no), \
 				mlx_delete_texture(cub->textcol->t_so), \
-				mlx_delete_texture(cub->textcol->t_we), 1);
+				mlx_delete_texture(cub->textcol->t_we), printf("EA\n"),1);
 	return (0);
 }
 
