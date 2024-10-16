@@ -1,1 +1,1 @@
-apres avoir recupere toutes les donnees gnl tant que /n jusqu'au debut de la map
+en fonction de la face du mur prendre en compte soit y soit x qui sont des floats 

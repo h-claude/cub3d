@@ -6,7 +6,7 @@
 /*   By: hclaude <hclaude@student.42mulhouse.fr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/01 23:59:19 by hclaude           #+#    #+#             */
-/*   Updated: 2024/10/16 00:40:21 by hclaude          ###   ########.fr       */
+/*   Updated: 2024/10/16 18:19:03 by hclaude          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -112,11 +112,6 @@ void	print_cub(int y, int x, int32_t color, int size)
 	}
 }
 
-float	get_distance(float x1, float y1, float x2, float y2)
-{
-	return (sqrt(pow(x2 - x1, 2) + pow(y2 - y1, 2)));
-}
-
 uint32_t color_dist(uint32_t color, float distance)
 {
 	uint8_t r = (color & 0xFF0000) >> 16;
@@ -136,7 +131,8 @@ uint32_t	get_text_color(t_cub *cub, float y, float x, float wall_x)
 	int				text_y;
 	uint32_t		text_color;
 
-	text = 0x000000;
+	text_color = 0x8080800;
+	text = NULL;
 	if (cub->WE)
 	{
 		if (x < 0.0)
@@ -153,7 +149,8 @@ uint32_t	get_text_color(t_cub *cub, float y, float x, float wall_x)
 	}
 	text_x = (int)(wall_x * text->width) % text->width;
 	text_y = (int)(y - (int)y) * text->height % text->height;
-	text_color = *(uint32_t *)(text->pixels + (text_y * text->width + text_x) * text->bytes_per_pixel);
+	if (cub->HIT_WALL)
+		text_color = *(uint32_t *)(text->pixels + (text_y * text->width + text_x) * text->bytes_per_pixel);
 	return (text_color);
 }
 
@@ -169,29 +166,22 @@ void	put_wall(float	distance, float angle, float ray_x, float ray_y, t_cub *cub)
 	float		wall_bottom = (HEIGHT / 2) + wall_height / 2;
 	int			x = angle * WIDTH / FOV;
 	int			y = 0;
+	int			x_width = x + 10;
 
-	wall_color = color_dist(get_text_color(cub, ray_y, ray_x, x), distance);
-	// printf("Distance: %f\n", distance);
-	// printf("Wall height: %f\n", wall_height);
-	// printf("Wall top: %f\n", wall_top);
-	// printf("Wall bottom: %f\n", wall_bottom);
-	// printf("Color: %x\n", wall_color);
-	// printf("X: %d\n", x);
-	// printf("Y: %d\n", y);
-	while (x > 0 && x < WIDTH && y >= 0 && y < wall_top && y < HEIGHT)
+	wall_color = get_text_color(cub, ray_y, ray_x, x);
+	while (y < HEIGHT)
 	{
-		mlx_put_pixel(r_image, x, y, cub->textcol->f);
-		y++;
-	}
-	while (y < wall_bottom)
-	{
-		if (x > 0 && y > 0 && x < WIDTH && y < HEIGHT && y > wall_top && y < wall_bottom)
-			mlx_put_pixel(r_image, x, y, wall_color);
-		y++;
-	}
-	while (x > 0 && x < WIDTH && y > 0 && y < HEIGHT)
-	{
-		mlx_put_pixel(r_image, x, y, cub->textcol->c);
+		while (x <= x_width && x < WIDTH)
+		{
+			if (y < wall_top)
+				mlx_put_pixel(r_image, x, y, cub->textcol->c);
+			else if (y >= wall_top && y <= wall_bottom)
+				mlx_put_pixel(r_image, x, y, wall_color);
+			else if (y > wall_bottom)
+				mlx_put_pixel(r_image, x, y, cub->textcol->f);
+			x++;
+		}
+		x = angle * WIDTH / FOV;
 		y++;
 	}
 }
@@ -205,6 +195,11 @@ float	normalize_angle(float angle)
 	return (angle);
 }
 
+float	get_distance(float x1, float y1, float x2, float y2)
+{
+	return (sqrt(pow(x2 - x1, 2) + pow(y2 - y1, 2)));
+}
+
 void	put_rays(t_cub *cub)
 {
 	float	angle = 0;
@@ -213,8 +208,9 @@ void	put_rays(t_cub *cub)
 	float	ray_y = cub->y_p;
 	float	ray_dir_x;
 	float	ray_dir_y;
-	bool	HIT_WALL = false;
+	float	distance;
 
+	cub->HIT_WALL = false;
 	while (angle < FOV)
 	{
 		cub->dir_p = normalize_angle(cub->dir_p);
@@ -223,29 +219,28 @@ void	put_rays(t_cub *cub)
 		ray_dir_x = cos(ray_angle);
 		ray_x = cub->x_p;
 		ray_y = cub->y_p;
-		HIT_WALL = false;
-		while (!HIT_WALL && (get_distance(cub->x_p, cub->y_p, ray_x, ray_y)) < 10)
+		cub->HIT_WALL = false;
+		while (!cub->HIT_WALL && get_distance(cub->x_p, cub->y_p, ray_x, ray_y) < 10)
 		{
-			//mlx_put_pixel(image, (ray_x * SCALING_SIZE), (ray_y * SCALING_SIZE), 0x0000FFFF);
 			ray_x += ray_dir_x * 0.01;
 			if (cub->map[(int)ray_y][(int)ray_x] == '1')
 			{
 				cub->WE = true;
-				HIT_WALL = true;
+				cub->HIT_WALL = true;
 			}
 			ray_y += ray_dir_y * 0.01;
-			if (!HIT_WALL && cub->map[(int)ray_y][(int)ray_x] == '1')
+			if (!cub->HIT_WALL && cub->map[(int)ray_y][(int)ray_x] == '1')
 			{
 				cub->WE = false;
-				HIT_WALL = true;
+				cub->HIT_WALL = true;
 			}
 		}
-		float	distance = get_distance(cub->x_p, cub->y_p, ray_x, ray_y);
+		distance = get_distance(cub->x_p, cub->y_p, ray_x, ray_y);
 		if (distance < 1)
 			distance = 1;
 		distance *= fabs(cos(ray_angle - cub->dir_p));
 		put_wall(distance, angle, ray_dir_x, ray_dir_y, cub);
-		angle += 0.03;
+		angle += 0.17;
 	}
 }
 
@@ -270,52 +265,52 @@ void	set_window_name(float dir_p)
 
 void	put_color(void *cub1)
 {
-	int		x;
-	int		y;
-	int		i = 0;
-	int		j = 0;
+	//int		x;
+	//int		y;
+	//int		i = 0;
+	//int		j = 0;
 	t_cub	*cub;
 
-	x = 0, y = 0;
+	//x = 0, y = 0;
 	cub = (t_cub *)cub1;
 	set_window_name(cub->dir_p);
-	while (cub->map[y])
-	{
-		while (cub->map[y][x])
-		{
-			if (cub->map[y][x] == ' ')
-			{
-			}
-			if (cub->map[y][x] == '1')
-				//print_cub(j, i, cub->textcol->f, SCALING_SIZE);
-			if (cub->map[y][x] == 'x' || cub->map[y][x] == '0')
-				//print_cub(j, i, cub->textcol->c, SCALING_SIZE);
-			if (is_player(cub->map[y][x]))
-			{
-				cub->map[y][x] = '0';
-				//print_cub(j, i, cub->textcol->c, SCALING_SIZE);
-			}
-			i = i + 24;
-			x++;
-		}
-		x = 0;
-		i = 0;
-		j = j + 24;
-		y++;
-	}
+	//while (cub->map[y])
+	//{
+	//	while (cub->map[y][x])
+	//	{
+	//		if (cub->map[y][x] == ' ')
+	//		{
+	//		}
+	//		if (cub->map[y][x] == '1')
+	//			print_cub(j, i, cub->textcol->f, SCALING_SIZE);
+	//		if (cub->map[y][x] == 'x' || cub->map[y][x] == '0')
+	//			print_cub(j, i, cub->textcol->c, SCALING_SIZE);
+	//		if (is_player(cub->map[y][x]))
+	//		{
+	//			cub->map[y][x] = '0';
+	//			print_cub(j, i, cub->textcol->c, SCALING_SIZE);
+	//		}
+	//		i = i + 24;
+	//		x++;
+	//	}
+	//	x = 0;
+	//	i = 0;
+	//	j = j + 24;
+	//	y++;
+	//}
 	//print_cub(cub->y_p * 24, cub->x_p * 24, 0x00FF0000, 10);
-	int x_f = 0;
-	int y_f = 0;
-	while (y_f < HEIGHT)
-	{
-		while (x_f < WIDTH)
-		{
-			mlx_put_pixel(r_image, x_f, y_f, 0x000000);
-			x_f++;
-		}
-		x_f = 0;
-		y_f++;
-	}
+	//int x_f = 0;
+	//int y_f = 0;
+	//while (y_f < HEIGHT)
+	//{
+	//	while (x_f < WIDTH)
+	//	{
+	//		mlx_put_pixel(r_image, x_f, y_f, 0x000000);
+	//		x_f++;
+	//	}
+	//	x_f = 0;
+	//	y_f++;
+	//}
 	put_rays(cub);
 }
 
@@ -336,6 +331,15 @@ int	load_textures(t_cub *cub)
 		return (mlx_delete_texture(cub->textcol->t_no), \
 				mlx_delete_texture(cub->textcol->t_so), \
 				mlx_delete_texture(cub->textcol->t_we), printf("EA\n"),1);
+	printf("NO Width: %d ", cub->textcol->t_no->width);
+	printf("NO Height: %d\n", cub->textcol->t_no->height);
+	printf("SO Width: %d ", cub->textcol->t_so->width);
+	printf("SO Height: %d\n", cub->textcol->t_so->height);
+	printf("WE Width: %d ", cub->textcol->t_we->width);
+	printf("WE Height: %d\n", cub->textcol->t_we->height);
+	printf("EA Width: %d ", cub->textcol->t_ea->width);
+	printf("EA Height: %d\n", cub->textcol->t_ea->height);
+
 	return (0);
 }
 
