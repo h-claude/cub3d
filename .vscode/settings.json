@@ -1,6 +1,7 @@
 {
 	"files.associations": {
 		"cub.h": "c",
-		"math.h": "c"
+		"math.h": "c",
+		"iterator": "c"
 	}
 }

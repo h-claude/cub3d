@@ -6,7 +6,7 @@
 /*   By: hclaude <hclaude@student.42mulhouse.fr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/27 14:47:24 by hclaude           #+#    #+#             */
-/*   Updated: 2024/10/16 16:05:48 by hclaude          ###   ########.fr       */
+/*   Updated: 2024/10/17 17:25:19 by hclaude          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,8 +23,8 @@
 
 # define SCALING_SIZE 24
 # define FOV 60
-# define WIDTH 3840
-# define HEIGHT 2160
+# define WIDTH 1920
+# define HEIGHT 1080
 
 typedef enum e_data_type
 {
@@ -50,6 +50,15 @@ typedef struct s_textcol
 	int32_t	c;
 }	t_textcol;
 
+typedef struct s_dr
+{
+	float	x;
+	float	y;
+	float	dir_x;
+	float	dir_y;
+	float	distance;
+}	t_dr;
+
 typedef struct cub
 {
 	int					fd;
@@ -60,6 +69,7 @@ typedef struct cub
 	bool				HIT_WALL;
 	char				**map;
 	struct s_textcol 	*textcol;
+	struct s_dr			*dr;
 }	t_cub;
 
 int	start_parsing(t_cub *cub, char *file);

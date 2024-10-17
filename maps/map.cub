@@ -1,7 +1,7 @@
-NO ./maps/textures/text_north.png
-SO ./maps/textures/text_south.png
-WE ./maps/textures/text_west.png
-EA ./maps/textures/text_east.png
+NO ./maps/textures/bluestone.png
+SO ./maps/textures/colorstone.png
+WE ./maps/textures/eagle.png
+EA ./maps/textures/greystone.png
 
 F 220,100,0
 C 225,30,0
