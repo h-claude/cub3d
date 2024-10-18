@@ -6,7 +6,7 @@
 /*   By: hclaude <hclaude@student.42mulhouse.fr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/01 23:59:19 by hclaude           #+#    #+#             */
-/*   Updated: 2024/10/17 18:46:54 by hclaude          ###   ########.fr       */
+/*   Updated: 2024/10/18 18:01:00 by hclaude          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -113,44 +113,49 @@ void	print_cub(int y, int x, int32_t color, int size)
 
 uint32_t color_dist(uint32_t color, float distance)
 {
-	uint8_t r = (color & 0xFF0000) >> 16;
-	uint8_t g = (color & 0x00FF00) >> 8;
-	uint8_t b = (color & 0x0000FF);
+	uint8_t r = (color) >> 24;
+	uint8_t g = (color) >> 16;
+	uint8_t b = (color) >> 8;
+	float n_distance;
 
-	r = r / distance;
-	g = g / distance;
-	b = b / distance;
-	return (r << 16 | g << 8 | b);
+	n_distance = distance / 2;
+	if (n_distance < 1)
+		n_distance = 1;
+	r = r  /  (n_distance);
+	g = g /  (n_distance);
+	b = b / (n_distance);
+	return (r << 24 | g << 16 | b << 8 | 255);
 }
 
-uint32_t	get_pixel(t_cub *cub, mlx_texture_t *texture)
+uint32_t	get_pixel(t_cub *cub, mlx_texture_t *texture, float height, int y)
 {
 	uint32_t	color;
 	int 		x_text;
 	int			y_text;
+	double		care;
 
 	if (cub->WE)
 	{
-		x_text = (int)(cub->dr->x * texture->width) % texture->width;
-		y_text = (int)((cub->dr->y / (float)HEIGHT) * texture->height);
+		x_text = (int)(modf(cub->dr->y, &care) * texture->width) % texture->width;
+		y_text = (int)(y / height * texture->height) % texture->height;
 	}
 	else
 	{
-		x_text = (int)(cub->dr->y * texture->width) % texture->width;
-		y_text = (int)(cub->dr->x / (float)HEIGHT) * texture->height;
+		x_text = (int)(modf(cub->dr->x, &care) * texture->width) % texture->width;
+		y_text = (int)(y / height * texture->height) % texture->height;
 	}
-	int i = 0;
+	int i;
 	i = (y_text * texture->width + x_text) * texture->bytes_per_pixel;
 	color = texture->pixels[i] << 24 | texture->pixels[i + 1] << 16 | texture->pixels[i + 2] << 8 | 255;
 	return (color);
 }
 
-uint32_t	get_text_color(t_cub *cub)
+uint32_t	get_text_color(t_cub *cub, float height, int y)
 {
 	mlx_texture_t	*text;
 	uint32_t		text_color;
 
-	text_color = 0x8080800;
+	text_color = 0xFFFFFFFF;
 	text = NULL;
 	if (cub->WE)
 	{
@@ -167,7 +172,7 @@ uint32_t	get_text_color(t_cub *cub)
 			text = cub->textcol->t_so; // pour le sud
 	}
 	if (cub->HIT_WALL)
-		text_color = get_pixel(cub, text);
+		text_color = get_pixel(cub, text, height, y);
 	return (text_color);
 }
 
@@ -187,9 +192,9 @@ void	put_wall(float angle, t_cub *cub)
 
 	while (y < HEIGHT)
 	{
+		wall_color = color_dist(get_text_color(cub, wall_bottom - wall_top, y), cub->dr->distance);
 		while (x <= x_width && x < WIDTH)
 		{
-			wall_color = get_text_color(cub);
 			if (y < wall_top)
 				mlx_put_pixel(r_image, x, y, cub->textcol->c);
 			else if (y >= wall_top && y <= wall_bottom)
@@ -197,11 +202,10 @@ void	put_wall(float angle, t_cub *cub)
 			else if (y > wall_bottom)
 				mlx_put_pixel(r_image, x, y, cub->textcol->f);
 			x++;
-			//cub->dr->x += 0.1;
 		}
 		x = angle * WIDTH / FOV;
 		y++;
-		cub->dr->y += 0.1;
+
 	}
 }
 
