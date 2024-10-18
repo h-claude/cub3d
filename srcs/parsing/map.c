@@ -6,7 +6,7 @@
 /*   By: hclaude <hclaude@student.42mulhouse.fr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/30 16:31:26 by hclaude           #+#    #+#             */
-/*   Updated: 2024/10/14 17:38:49 by hclaude          ###   ########.fr       */
+/*   Updated: 2024/10/18 18:57:46 by hclaude          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,16 +64,18 @@ int	lst_add_node(t_list *lst, char *content)
 
 int	lst_to_cub(t_cub *cub, t_list **lst)
 {
-	int		i;
-	t_list	*tmp_lst;
+	size_t		i;
+	size_t		len;
+	t_list		*tmp_lst;
 
 	tmp_lst = *lst;
 	i = 0;
-	cub->map = malloc(sizeof(char *) * lstlen(*lst) + 1);
+	len = lstlen(*lst);
+	cub->map = malloc(sizeof(char *) * (len + 1));
 	if (!cub->map)
 		return (free_lst(lst), (void)printf("Error\nFailed malloc\n"), 1);
-	cub->map[lstlen(*lst)] = NULL;
-	while (tmp_lst)
+	cub->map[len] = NULL;
+	while (tmp_lst && i != len)
 	{
 		cub->map[i] = ft_strdup((char *)tmp_lst->content);
 		if (!cub->map[i])

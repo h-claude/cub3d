@@ -6,7 +6,7 @@
 /*   By: hclaude <hclaude@student.42mulhouse.fr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/01 23:59:19 by hclaude           #+#    #+#             */
-/*   Updated: 2024/10/18 18:01:00 by hclaude          ###   ########.fr       */
+/*   Updated: 2024/10/18 19:56:24 by hclaude          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -133,18 +133,16 @@ uint32_t	get_pixel(t_cub *cub, mlx_texture_t *texture, float height, int y)
 	int 		x_text;
 	int			y_text;
 	double		care;
+	int i;
+	(void)height;
 
 	if (cub->WE)
-	{
 		x_text = (int)(modf(cub->dr->y, &care) * texture->width) % texture->width;
-		y_text = (int)(y / height * texture->height) % texture->height;
-	}
 	else
-	{
 		x_text = (int)(modf(cub->dr->x, &care) * texture->width) % texture->width;
-		y_text = (int)(y / height * texture->height) % texture->height;
-	}
-	int i;
+
+	y_text = (int)((y / height) * (texture->height / cub->dr->distance)) % texture->height;
+
 	i = (y_text * texture->width + x_text) * texture->bytes_per_pixel;
 	color = texture->pixels[i] << 24 | texture->pixels[i + 1] << 16 | texture->pixels[i + 2] << 8 | 255;
 	return (color);
@@ -188,7 +186,7 @@ void	put_wall(float angle, t_cub *cub)
 	float		wall_bottom = (HEIGHT / 2) + wall_height / 2;
 	int			x = angle * WIDTH / FOV;
 	int			y = 0;
-	int			x_width = x + 10;
+	int			x_width = x + 7;
 
 	while (y < HEIGHT)
 	{
@@ -354,15 +352,6 @@ int	load_textures(t_cub *cub)
 		return (mlx_delete_texture(cub->textcol->t_no), \
 				mlx_delete_texture(cub->textcol->t_so), \
 				mlx_delete_texture(cub->textcol->t_we), printf("EA\n"),1);
-	printf("NO Width: %d ", cub->textcol->t_no->width);
-	printf("NO Height: %d\n", cub->textcol->t_no->height);
-	printf("SO Width: %d ", cub->textcol->t_so->width);
-	printf("SO Height: %d\n", cub->textcol->t_so->height);
-	printf("WE Width: %d ", cub->textcol->t_we->width);
-	printf("WE Height: %d\n", cub->textcol->t_we->height);
-	printf("EA Width: %d ", cub->textcol->t_ea->width);
-	printf("EA Height: %d\n", cub->textcol->t_ea->height);
-
 	return (0);
 }
 
