@@ -6,7 +6,7 @@
 /*   By: hclaude <hclaude@student.42mulhouse.fr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/27 14:47:24 by hclaude           #+#    #+#             */
-/*   Updated: 2024/10/17 17:25:19 by hclaude          ###   ########.fr       */
+/*   Updated: 2024/10/19 00:58:18 by hclaude          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,6 +25,7 @@
 # define FOV 60
 # define WIDTH 1920
 # define HEIGHT 1080
+# define MOVE_SPEED 0.05
 
 typedef enum e_data_type
 {
@@ -56,30 +57,44 @@ typedef struct s_dr
 	float	y;
 	float	dir_x;
 	float	dir_y;
-	float	distance;
+	float	dist;
 }	t_dr;
 
 typedef struct cub
 {
 	int					fd;
-	float				x_p;
-	float				y_p;
-	float				dir_p;
-	bool				WE;
-	bool				HIT_WALL;
-	char				**map;
-	struct s_textcol 	*textcol;
-	struct s_dr			*dr;
+	float				x_p; // player position
+	float				y_p; // player position
+	float				dir_p; // player direction
+	bool				WE; // WALL_EAST_OR_WEST
+	bool				HW; // HIT_WALL
+	char				**map; // map
+	struct s_textcol 	*textcol; // textures and colors
+	struct s_dr			*dr; // data ray
 }	t_cub;
 
-int	start_parsing(t_cub *cub, char *file);
-int	get_data(t_cub *cub);
-int	parse_map(t_cub *cub);
-int	check_map(t_cub *cub);
-int	flood_fill(char **map, int y, int x);
-int	show_map(t_cub *cub);
-int	is_player(char player);
-int	check_file(char *file, t_cub *cub);
 
+// parsing
+int		start_parsing(t_cub *cub, char *file);
+int32_t	convert_int(char *str);
+int		data_is_collected(t_cub *cub);
+int		verif_syntax(char *str);
+size_t	tab_len(char **tab);
+void	free_gnl(int fd);
+int		get_data(t_cub *cub);
+int		parse_map(t_cub *cub);
+int		check_map(t_cub *cub);
+int		flood_fill(char **map, int y, int x);
+int		show_map(t_cub *cub);
+int		is_player(char player);
+int		check_file(char *file, t_cub *cub);
+int		is_multiple_player(t_cub *cub);
+int		is_wrong_character(char **map);
+int		is_player(char player);
+
+// utils
+void	freetab(char **tab);
+size_t	lstlen(t_list *lst);
+void	free_lst(t_list **lst);
 
 #endif

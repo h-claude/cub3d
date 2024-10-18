@@ -6,37 +6,11 @@
 /*   By: hclaude <hclaude@student.42mulhouse.fr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/30 16:31:26 by hclaude           #+#    #+#             */
-/*   Updated: 2024/10/18 18:57:46 by hclaude          ###   ########.fr       */
+/*   Updated: 2024/10/19 00:56:16 by hclaude          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "cub.h"
-
-void	free_lst(t_list **lst)
-{
-	t_list	*tmp_lst;
-
-	while (*lst)
-	{
-		tmp_lst = (*lst)->next;
-		free((*lst)->content);
-		free(*lst);
-		*lst = tmp_lst;
-	}
-}
-
-size_t	lstlen(t_list *lst)
-{
-	size_t	i;
-
-	i = 0;
-	while (lst)
-	{
-		i++;
-		lst = lst->next;
-	}
-	return (i);
-}
 
 int	lst_add_node(t_list *lst, char *content)
 {
@@ -71,6 +45,8 @@ int	lst_to_cub(t_cub *cub, t_list **lst)
 	tmp_lst = *lst;
 	i = 0;
 	len = lstlen(*lst);
+	if (len > 1500)
+		return (free_lst(lst), (void)printf("Error\nMap too big\n"), 1);
 	cub->map = malloc(sizeof(char *) * (len + 1));
 	if (!cub->map)
 		return (free_lst(lst), (void)printf("Error\nFailed malloc\n"), 1);

@@ -6,7 +6,7 @@
 /*   By: hclaude <hclaude@student.42mulhouse.fr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/27 15:07:42 by hclaude           #+#    #+#             */
-/*   Updated: 2024/10/17 14:23:04 by hclaude          ###   ########.fr       */
+/*   Updated: 2024/10/19 00:59:14 by hclaude          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,11 +50,11 @@ int	init_cub(t_cub *cub)
 	cub->dr = malloc(sizeof(t_dr));
 	if (!cub->dr)
 		return (printf("Error\nMalloc failed\n"), 1);
-	cub->dr-> x = 0;
-	cub->dr-> y = 0;
-	cub->dr-> dir_x = 0;
-	cub->dr-> dir_y = 0;
-	cub->dr-> distance = 0;
+	cub->dr->x = 0;
+	cub->dr->y = 0;
+	cub->dr->dir_x = 0;
+	cub->dr->dir_y = 0;
+	cub->dr->dist = 0;
 	return (0);
 }
 
