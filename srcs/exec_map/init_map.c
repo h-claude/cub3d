@@ -6,30 +6,23 @@
 /*   By: hclaude <hclaude@student.42mulhouse.fr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/01 23:59:19 by hclaude           #+#    #+#             */
-/*   Updated: 2024/10/19 04:43:13 by hclaude          ###   ########.fr       */
+/*   Updated: 2024/10/19 20:28:19 by hclaude          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "cub.h"
 
-static mlx_t		*mlx;
-static mlx_image_t	*r_image;
-
 int	player_can_reach(float y, float x, t_cub *cub)
 {
 	int	y1;
 	int	x1;
-	int	y2;
-	int	x2;
 
 	y1 = (int)(y * 24);
 	x1 = (int)(x * 24);
-	y2 = (int)((y + (float)10 / 24) * 24);
-	x2 = (int)((x + (float)10 / 24) * 24);
 	y1 = y1 / 24;
 	x1 = x1 / 24;
-	y2 = y2 / 24;
-	x2 = x2 / 24;
+	if (y1 < 0 || x1 < 0 || (size_t)y1 > cub->map_len || !cub->map[y1] || ft_strlen(cub->map[y1]) < (size_t)x1)
+		return (0);
 	if (cub->map[y1][x1] == '1')
 		return (0);
 	else
@@ -41,7 +34,7 @@ void	input_strafe(t_cub *cub)
 	float	new_x;
 	float	new_y;
 
-	if (mlx_is_key_down(mlx, MLX_KEY_D))
+	if (mlx_is_key_down(cub->mlx, MLX_KEY_D))
 	{
 		new_x = cub->x_p + cos(cub->dir_p + M_PI / 2) * MOVE_SPEED;
 		new_y = cub->y_p + sin(cub->dir_p + M_PI / 2) * MOVE_SPEED;
@@ -51,7 +44,7 @@ void	input_strafe(t_cub *cub)
 			cub->y_p = new_y;
 		}
 	}
-	else if (mlx_is_key_down(mlx, MLX_KEY_A))
+	else if (mlx_is_key_down(cub->mlx, MLX_KEY_A))
 	{
 		new_x = cub->x_p + cos(cub->dir_p - M_PI / 2) * MOVE_SPEED;
 		new_y = cub->y_p + sin(cub->dir_p - M_PI / 2) * MOVE_SPEED;
@@ -68,7 +61,7 @@ void	input_move(t_cub *cub)
 	float	new_x;
 	float	new_y;
 
-	if (mlx_is_key_down(mlx, MLX_KEY_W))
+	if (mlx_is_key_down(cub->mlx, MLX_KEY_W))
 	{
 		new_x = cub->x_p + cos(cub->dir_p) * MOVE_SPEED;
 		new_y = cub->y_p + sin(cub->dir_p) * MOVE_SPEED;
@@ -78,7 +71,7 @@ void	input_move(t_cub *cub)
 			cub->y_p = new_y;
 		}
 	}
-	else if (mlx_is_key_down(mlx, MLX_KEY_S))
+	else if (mlx_is_key_down(cub->mlx, MLX_KEY_S))
 	{
 		new_x = cub->x_p - cos(cub->dir_p) * MOVE_SPEED;
 		new_y = cub->y_p - sin(cub->dir_p) * MOVE_SPEED;
@@ -97,31 +90,14 @@ void	input(void *cub1)
 	cub = (t_cub *)cub1;
 	input_move(cub);
 	input_strafe(cub);
-	if (mlx_is_key_down(mlx, MLX_KEY_LEFT))
+	if (mlx_is_key_down(cub->mlx, MLX_KEY_LEFT))
 		cub->dir_p -= 0.05;
-	else if (mlx_is_key_down(mlx, MLX_KEY_RIGHT))
+	else if (mlx_is_key_down(cub->mlx, MLX_KEY_RIGHT))
 		cub->dir_p += 0.05;
-	else if (mlx_is_key_down(mlx, MLX_KEY_ESCAPE))
-		exit(0); // faut faire ca bien
-	// du genre appeler une fonction qui free tout et qui ferme la fenetre et tout ca bien proprement et tout et tout et tout et tout
-}
-
-void	print_cub(int y, int x, int32_t color, int size)
-{
-	int	y1;
-	int	x1;
-
-	y1 = y + size;
-	x1 = x + size;
-	while (y1 != y)
+	else if (mlx_is_key_down(cub->mlx, MLX_KEY_ESCAPE))
 	{
-		while (x1 != x)
-		{
-			mlx_put_pixel(r_image, x, y, color);
-			x++;
-		}
-		x = x - size;
-		y++;
+		free_structs(&cub);
+		exit(0);
 	}
 }
 
@@ -220,11 +196,11 @@ void	put_wall(float angle, t_cub *cub)
 		while (x <= x_width && x < WIDTH)
 		{
 			if (y < wall_top)
-				mlx_put_pixel(r_image, x, y, cub->textcol->c);
+				mlx_put_pixel(cub->image, x, y, cub->textcol->c);
 			else if (y >= wall_top && y <= wall_bot)
-				mlx_put_pixel(r_image, x, y, wall_color);
+				mlx_put_pixel(cub->image, x, y, wall_color);
 			else if (y > wall_bot)
-				mlx_put_pixel(r_image, x, y, cub->textcol->f);
+				mlx_put_pixel(cub->image, x, y, cub->textcol->f);
 			x++;
 		}
 		x = angle * WIDTH / FOV;
@@ -268,13 +244,13 @@ void	put_rays(t_cub *cub)
 		while (!cub->hw && get_distance(cub) < 10)
 		{
 			cub->dr->x += cub->dr->dir_x * 0.01;
-			if (cub->map[(int)cub->dr->y][(int)cub->dr->x] == '1')
+			if ((size_t)cub->dr->y < cub->map_len && (size_t)cub->dr->x < ft_strlen(cub->map[(int)cub->dr->y]) && cub->map[(int)cub->dr->y][(int)cub->dr->x] == '1')
 			{
 				cub->we = true;
 				cub->hw = true;
 			}
 			cub->dr->y += cub->dr->dir_y * 0.01;
-			if (!cub->hw && cub->map[(int)cub->dr->y][(int)cub->dr->x] == '1')
+			if (!cub->hw && (size_t)cub->dr->y < cub->map_len && (size_t)cub->dr->x < ft_strlen(cub->map[(int)cub->dr->y]) && cub->map[(int)cub->dr->y][(int)cub->dr->x] == '1')
 			{
 				cub->we = false;
 				cub->hw = true;
@@ -289,81 +265,31 @@ void	put_rays(t_cub *cub)
 	}
 }
 
-void	set_window_name(float dir_p)
+void	set_window_name(t_cub *cub)
 {
 	char	*name;
 
-	if (dir_p < 0)
-		dir_p += 2 * M_PI;
-	if (dir_p > 2 * M_PI)
-		dir_p -= 2 * M_PI;
-	if (dir_p >= 0 && dir_p < M_PI / 2)
+	if (cub->dir_p < 0)
+		cub->dir_p += 2 * M_PI;
+	if (cub->dir_p > 2 * M_PI)
+		cub->dir_p -= 2 * M_PI;
+	if (cub->dir_p >= 0 && cub->dir_p < M_PI / 2)
 		name = "EAST";
-	else if (dir_p >= M_PI / 2 && dir_p < M_PI)
+	else if (cub->dir_p >= M_PI / 2 && cub->dir_p < M_PI)
 		name = "SOUTH";
-	else if (dir_p >= M_PI && dir_p < 3 * M_PI / 2)
+	else if (cub->dir_p >= M_PI && cub->dir_p < 3 * M_PI / 2)
 		name = "WEST";
-	else if (dir_p >= 3 * M_PI / 2 && dir_p < 2 * M_PI)
+	else if (cub->dir_p >= 3 * M_PI / 2 && cub->dir_p < 2 * M_PI)
 		name = "NORTH";
-	mlx_set_window_title(mlx, name);
+	mlx_set_window_title(cub->mlx, name);
 }
-
-// void	mini_map(void *cub1)
-// {
-	//int		x;
-	//int		y;
-	//int		i = 0;
-	//int		j = 0;
-	// t_cub	*cub;
-
-	//x = 0, y = 0;
-	// cub = (t_cub *)cub1;
-	//while (cub->map[y])
-	//{
-	//	while (cub->map[y][x])
-	//	{
-	//		if (cub->map[y][x] == ' ')
-	//		{
-	//		}
-	//		if (cub->map[y][x] == '1')
-	//			print_cub(j, i, cub->textcol->f, SCALING_SIZE);
-	//		if (cub->map[y][x] == 'x' || cub->map[y][x] == '0')
-	//			print_cub(j, i, cub->textcol->c, SCALING_SIZE);
-	//		if (is_player(cub->map[y][x]))
-	//		{
-	//			cub->map[y][x] = '0';
-	//			print_cub(j, i, cub->textcol->c, SCALING_SIZE);
-	//		}
-	//		i = i + 24;
-	//		x++;
-	//	}
-	//	x = 0;
-	//	i = 0;
-	//	j = j + 24;
-	//	y++;
-	//}
-	//print_cub(cub->y_p * 24, cub->x_p * 24, 0x00FF0000, 10);
-	//int x_f = 0;
-	//int y_f = 0;
-	//while (y_f < HEIGHT)
-	//{
-	//	while (x_f < WIDTH)
-	//	{
-	//		mlx_put_pixel(r_image, x_f, y_f, 0x000000);
-	//		x_f++;
-	//	}
-	//	x_f = 0;
-	//	y_f++;
-	//}
-
-// }
 
 void	draw(void *cub1)
 {
 	t_cub	*cub;
 
 	cub = (t_cub *)cub1;
-	set_window_name(cub->dir_p);
+	set_window_name(cub);
 	put_rays(cub);
 }
 
@@ -391,11 +317,16 @@ int	show_map(t_cub *cub)
 {
 	if (load_textures(cub))
 		return ((void)printf("ERROR\n"), 1);
-	mlx = mlx_init(WIDTH, HEIGHT, "THIS IS CUB3D YEAAAAAAAAAAAAAAAAAH", false);
-	r_image = mlx_new_image(mlx, WIDTH, HEIGHT);
-	mlx_image_to_window(mlx, r_image, 0, 0);
-	mlx_loop_hook(mlx, draw, cub);
-	mlx_loop_hook(mlx, input, cub);
-	mlx_loop(mlx);
+	cub->mlx = mlx_init(WIDTH, HEIGHT, "THIS IS CUB3D YEAAAAAAAAAAAAAAAAAH", false);
+	if (!cub->mlx)
+		return (1);
+	cub->image = mlx_new_image(cub->mlx, WIDTH, HEIGHT);
+	if (!cub->image)
+		return (1);
+	if (mlx_image_to_window(cub->mlx, cub->image, 0, 0))
+		return (1);
+	mlx_loop_hook(cub->mlx, draw, cub);
+	mlx_loop_hook(cub->mlx, input, cub);
+	mlx_loop(cub->mlx);
 	return (1);
 }

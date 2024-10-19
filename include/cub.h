@@ -6,7 +6,7 @@
 /*   By: hclaude <hclaude@student.42mulhouse.fr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/27 14:47:24 by hclaude           #+#    #+#             */
-/*   Updated: 2024/10/19 04:36:28 by hclaude          ###   ########.fr       */
+/*   Updated: 2024/10/19 19:11:52 by hclaude          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,8 +69,11 @@ typedef struct cub
 	bool				we; // WALL_EAST_OR_WEST
 	bool				hw; // HIT_WALL
 	char				**map; // map
+	size_t				map_len;
 	struct s_textcol	*textcol; // textures and colors
 	struct s_dr			*dr; // data ray
+	mlx_t				*mlx;
+	mlx_image_t			*image;
 }	t_cub;
 
 // parsing
@@ -92,8 +95,9 @@ int		is_wrong_character(char **map);
 int		is_player(char player);
 
 // utils
-void	freetab(char **tab);
+void	freetab(char **tab, size_t len, bool no_len);
 size_t	lstlen(t_list *lst);
 void	free_lst(t_list **lst);
+void	free_structs(t_cub **cub);
 
 #endif

@@ -6,7 +6,7 @@
 /*   By: hclaude <hclaude@student.42mulhouse.fr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/19 00:49:29 by hclaude           #+#    #+#             */
-/*   Updated: 2024/10/19 00:54:39 by hclaude          ###   ########.fr       */
+/*   Updated: 2024/10/19 19:05:06 by hclaude          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,8 +14,15 @@
 
 void	free_gnl(int fd)
 {
+	char	*line;
+
 	close(fd);
-	get_next_line(fd);
+	line = get_next_line(fd);
+	while (line)
+	{
+		free(line);
+		line = get_next_line(fd);
+	}
 }
 
 size_t	tab_len(char **tab)
@@ -56,12 +63,14 @@ int32_t	convert_int(char *str)
 	int		b;
 
 	splt_str = ft_split(str, ',');
+	if (!splt_str)
+		return (-1);
 	if (tab_len(splt_str) != 3)
-		return (freetab(splt_str), -1);
+		return (freetab(splt_str, 0, true), -1);
 	r = ft_atoi(splt_str[0]);
 	g = ft_atoi(splt_str[1]);
 	b = ft_atoi(splt_str[2]);
-	freetab(splt_str);
+	freetab(splt_str, 0, true);
 	if ((r < 0 || r > 255) || (g < 0 || g > 255) || (b < 0 || b > 255))
 		return (-1);
 	return ((r << 24) | (g << 16) | b << 8 | 255);
@@ -83,5 +92,3 @@ int	data_is_collected(t_cub *cub)
 		return (0);
 	return (1);
 }
-
-

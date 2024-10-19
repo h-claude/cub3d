@@ -6,7 +6,7 @@
 /*   By: hclaude <hclaude@student.42mulhouse.fr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/27 15:07:42 by hclaude           #+#    #+#             */
-/*   Updated: 2024/10/19 00:59:14 by hclaude          ###   ########.fr       */
+/*   Updated: 2024/10/19 19:08:59 by hclaude          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,7 @@ void	print_data(t_cub *cub)
 	}
 }
 
-int	init_cub(t_cub *cub)
+void	init_structs(t_cub *cub)
 {
 	cub->fd = 0;
 	cub->x_p = 0;
@@ -47,21 +47,48 @@ int	init_cub(t_cub *cub)
 	cub->textcol->we = NULL;
 	cub->textcol->no = NULL;
 	cub->textcol->so = NULL;
-	cub->dr = malloc(sizeof(t_dr));
-	if (!cub->dr)
-		return (printf("Error\nMalloc failed\n"), 1);
+	cub->textcol->t_ea = NULL;
+	cub->textcol->t_we = NULL;
+	cub->textcol->t_no = NULL;
+	cub->textcol->t_so = NULL;
+	cub->map_len = 0;
 	cub->dr->x = 0;
 	cub->dr->y = 0;
 	cub->dr->dir_x = 0;
 	cub->dr->dir_y = 0;
 	cub->dr->dist = 0;
-	return (0);
+	cub->mlx = NULL;
+	cub->image = NULL;
+}
+
+t_cub	*alloc_structs(void)
+{
+	t_cub	*cub;
+
+	cub = malloc(sizeof(t_cub));
+	if (!cub)
+	{
+		printf("Error\nMalloc failed\n");
+		return (NULL);
+	}
+	cub->textcol = malloc(sizeof(t_textcol));
+	if (!cub->textcol)
+	{
+		printf("Error\nMalloc failed\n");
+		return (free(cub), NULL);
+	}
+	cub->dr = malloc(sizeof(t_dr));
+	if (!cub->dr)
+	{
+		printf("Error\nMalloc failed\n");
+		return (free(cub->textcol), free(cub), NULL);
+	}
+	init_structs(cub);
+	return (cub);
 }
 
 int	start_parsing(t_cub *cub, char *file)
 {
-	if (init_cub(cub))
-		return (1);
 	if (check_file(file, cub))
 		return (1);
 	if (get_data(cub))
@@ -78,23 +105,15 @@ int	main(int argc, char **argv)
 		printf("Error\nInvalid number of arguments\n");
 		return (1);
 	}
-	cub = malloc(sizeof(t_cub));
+	cub = alloc_structs();
 	if (!cub)
-	{
-		printf("Error\nMalloc failed\n");
 		return (1);
-	}
-	cub->textcol = malloc(sizeof(t_textcol));
-	if (!cub->textcol)
-	{
-		printf("Error\nMalloc failed\n");
-		return (1);
-	}
 	if (start_parsing(cub, argv[1]))
-		return (1); // faire fonction qui free tout
+		return (free_structs(&cub), 1);
 	if (check_map(cub))
-		return (1);
+		return (free_structs(&cub), 1);
 	print_data(cub);
 	if (show_map(cub))
-		return (1);
+		return (free_structs(&cub), 1);
+	free_structs(&cub);
 }
