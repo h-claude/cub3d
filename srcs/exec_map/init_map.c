@@ -6,7 +6,7 @@
 /*   By: hclaude <hclaude@student.42mulhouse.fr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/01 23:59:19 by hclaude           #+#    #+#             */
-/*   Updated: 2024/10/19 00:46:12 by hclaude          ###   ########.fr       */
+/*   Updated: 2024/10/19 04:43:13 by hclaude          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -152,7 +152,7 @@ uint32_t	get_pixel(t_cub *cub, mlx_texture_t *text, float height, int y)
 	double			useless;
 	int				i;
 
-	if (cub->WE)
+	if (cub->we)
 		x_text = (int)(modf(cub->dr->y, &useless) * text->width) % text->width;
 	else
 		x_text = (int)(modf(cub->dr->x, &useless) * text->width) % text->width;
@@ -174,7 +174,7 @@ uint32_t	get_text_color(t_cub *cub, float height, int y)
 
 	text_color = 0xFFFFFFFF;
 	text = NULL;
-	if (cub->WE)
+	if (cub->we)
 	{
 		if (cub->dr->dir_x < 0.0)
 			text = cub->textcol->t_we;
@@ -188,7 +188,7 @@ uint32_t	get_text_color(t_cub *cub, float height, int y)
 		else
 			text = cub->textcol->t_so;
 	}
-	if (cub->HW)
+	if (cub->hw)
 		text_color = get_pixel(cub, text, height, y);
 	return (text_color);
 }
@@ -254,7 +254,7 @@ void	put_rays(t_cub *cub)
 
 	cub->dr->x = cub->x_p;
 	cub->dr->y = cub->y_p;
-	cub->HW = false;
+	cub->hw = false;
 	ray = 0;
 	while (ray < FOV)
 	{
@@ -264,20 +264,20 @@ void	put_rays(t_cub *cub)
 		cub->dr->dir_x = cos(ray_angle);
 		cub->dr->x = cub->x_p;
 		cub->dr->y = cub->y_p;
-		cub->HW = false;
-		while (!cub->HW && get_distance(cub) < 10)
+		cub->hw = false;
+		while (!cub->hw && get_distance(cub) < 10)
 		{
 			cub->dr->x += cub->dr->dir_x * 0.01;
 			if (cub->map[(int)cub->dr->y][(int)cub->dr->x] == '1')
 			{
-				cub->WE = true;
-				cub->HW = true;
+				cub->we = true;
+				cub->hw = true;
 			}
 			cub->dr->y += cub->dr->dir_y * 0.01;
-			if (!cub->HW && cub->map[(int)cub->dr->y][(int)cub->dr->x] == '1')
+			if (!cub->hw && cub->map[(int)cub->dr->y][(int)cub->dr->x] == '1')
 			{
-				cub->WE = false;
-				cub->HW = true;
+				cub->we = false;
+				cub->hw = true;
 			}
 		}
 		get_distance(cub);

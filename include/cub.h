@@ -6,7 +6,7 @@
 /*   By: hclaude <hclaude@student.42mulhouse.fr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/27 14:47:24 by hclaude           #+#    #+#             */
-/*   Updated: 2024/10/19 00:58:18 by hclaude          ###   ########.fr       */
+/*   Updated: 2024/10/19 04:36:28 by hclaude          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,16 +39,16 @@ typedef enum e_data_type
 
 typedef struct s_textcol
 {
-	char	*no;
-	char	*so;
-	char	*we;
-	char	*ea;
+	char			*no;
+	char			*so;
+	char			*we;
+	char			*ea;
 	mlx_texture_t	*t_no;
 	mlx_texture_t	*t_so;
 	mlx_texture_t	*t_we;
 	mlx_texture_t	*t_ea;
-	int32_t	f;
-	int32_t	c;
+	int32_t			f;
+	int32_t			c;
 }	t_textcol;
 
 typedef struct s_dr
@@ -66,13 +66,12 @@ typedef struct cub
 	float				x_p; // player position
 	float				y_p; // player position
 	float				dir_p; // player direction
-	bool				WE; // WALL_EAST_OR_WEST
-	bool				HW; // HIT_WALL
+	bool				we; // WALL_EAST_OR_WEST
+	bool				hw; // HIT_WALL
 	char				**map; // map
-	struct s_textcol 	*textcol; // textures and colors
+	struct s_textcol	*textcol; // textures and colors
 	struct s_dr			*dr; // data ray
 }	t_cub;
-
 
 // parsing
 int		start_parsing(t_cub *cub, char *file);
