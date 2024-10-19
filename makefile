@@ -10,7 +10,8 @@ MLX = -IMLX42/include/ -LMLX42/build/ -lmlx42 $(GLFW)
 OBJDIR= .objs
 
 SRCS = srcs/main.c srcs/parsing/verif.c srcs/parsing/get_data.c srcs/parsing/map.c srcs/parsing/flood_fill.c \
-srcs/exec_map/init_map.c srcs/utils/utils_parsing.c srcs/parsing/player_utils.c srcs/utils/utils.c srcs/utils/free.c \
+srcs/raycasting/init_raycasting.c srcs/utils/utils_parsing.c srcs/parsing/player_utils.c srcs/utils/utils.c srcs/utils/free.c \
+srcs/raycasting/draw_wall.c srcs/raycasting/input.c srcs/raycasting/utils.c
 
 OBJS = $(patsubst %.c, $(OBJDIR)/%.o, $(SRCS))
 

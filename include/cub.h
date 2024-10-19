@@ -6,7 +6,7 @@
 /*   By: hclaude <hclaude@student.42mulhouse.fr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/27 14:47:24 by hclaude           #+#    #+#             */
-/*   Updated: 2024/10/19 19:11:52 by hclaude          ###   ########.fr       */
+/*   Updated: 2024/10/19 22:39:16 by hclaude          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,6 +58,10 @@ typedef struct s_dr
 	float	dir_x;
 	float	dir_y;
 	float	dist;
+	// wall data
+	float	wall_height;
+	float	wall_top;
+	float	wall_bot;
 }	t_dr;
 
 typedef struct cub
@@ -77,27 +81,38 @@ typedef struct cub
 }	t_cub;
 
 // parsing
-int		start_parsing(t_cub *cub, char *file);
-int32_t	convert_int(char *str);
-int		data_is_collected(t_cub *cub);
-int		verif_syntax(char *str);
-size_t	tab_len(char **tab);
-void	free_gnl(int fd);
-int		get_data(t_cub *cub);
-int		parse_map(t_cub *cub);
-int		check_map(t_cub *cub);
-int		flood_fill(char **map, int y, int x);
-int		show_map(t_cub *cub);
-int		is_player(char player);
-int		check_file(char *file, t_cub *cub);
-int		is_multiple_player(t_cub *cub);
-int		is_wrong_character(char **map);
-int		is_player(char player);
+int			start_parsing(t_cub *cub, char *file);
+int32_t		convert_int(char *str);
+int			data_is_collected(t_cub *cub);
+int			verif_syntax(char *str);
+size_t		tab_len(char **tab);
+void		free_gnl(int fd);
+int			get_data(t_cub *cub);
+int			parse_map(t_cub *cub);
+int			check_map(t_cub *cub);
+int			flood_fill(char **map, int y, int x);
+int			show_map(t_cub *cub);
+int			is_player(char player);
+int			check_file(char *file, t_cub *cub);
+int			is_multiple_player(t_cub *cub);
+int			is_wrong_character(char **map);
+int			is_player(char player);
+
+// raycasting
+int			launch_raycasting(t_cub *cub);
+void		set_window_name(t_cub *cub);
+float		get_distance(t_cub *cub);
+void		normalize_angle(float *angle);
+int			load_textures(t_cub *cub);
+void		put_rays(t_cub *cub);
+void		input(void *cub1);
+uint32_t	get_text_color(t_cub *cub, float height, int y);
+uint32_t	color_dist(uint32_t color, float distance);
 
 // utils
-void	freetab(char **tab, size_t len, bool no_len);
-size_t	lstlen(t_list *lst);
-void	free_lst(t_list **lst);
-void	free_structs(t_cub **cub);
+void		freetab(char **tab, size_t len, bool no_len);
+size_t		lstlen(t_list *lst);
+void		free_lst(t_list **lst);
+void		free_structs(t_cub **cub);
 
 #endif

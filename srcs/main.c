@@ -6,7 +6,7 @@
 /*   By: hclaude <hclaude@student.42mulhouse.fr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/27 15:07:42 by hclaude           #+#    #+#             */
-/*   Updated: 2024/10/19 19:08:59 by hclaude          ###   ########.fr       */
+/*   Updated: 2024/10/19 22:37:39 by hclaude          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -113,7 +113,7 @@ int	main(int argc, char **argv)
 	if (check_map(cub))
 		return (free_structs(&cub), 1);
 	print_data(cub);
-	if (show_map(cub))
+	if (launch_raycasting(cub))
 		return (free_structs(&cub), 1);
 	free_structs(&cub);
 }
