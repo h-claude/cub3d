@@ -6,7 +6,7 @@
 /*   By: hclaude <hclaude@student.42mulhouse.fr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/19 22:30:18 by hclaude           #+#    #+#             */
-/*   Updated: 2024/10/19 22:33:24 by hclaude          ###   ########.fr       */
+/*   Updated: 2024/10/20 13:52:32 by hclaude          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,8 +24,8 @@ float	get_distance(t_cub *cub)
 {
 	cub->dr->dist = sqrt(pow(cub->dr->x - cub->x_p, 2) \
 		+ pow(cub->dr->y - cub->y_p, 2));
-	if (cub->dr->dist < 1)
-		cub->dr->dist = 1;
+	if (cub->dr->dist <= 0)
+		cub->dr->dist += 0.01;
 	return (cub->dr->dist);
 }
 

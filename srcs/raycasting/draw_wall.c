@@ -6,7 +6,7 @@
 /*   By: hclaude <hclaude@student.42mulhouse.fr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/19 22:32:06 by hclaude           #+#    #+#             */
-/*   Updated: 2024/10/19 22:32:51 by hclaude          ###   ########.fr       */
+/*   Updated: 2024/10/20 13:54:26 by hclaude          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,7 @@ void	draw_wall(float angle, t_cub *cub)
 				mlx_put_pixel(cub->image, x++, y, cub->textcol->c);
 			else if (y >= cub->dr->wall_top && y <= cub->dr->wall_bot)
 				mlx_put_pixel(cub->image, x++, y, wall_color);
-			else if (y > cub->dr->wall_bot)
+			else
 				mlx_put_pixel(cub->image, x++, y, cub->textcol->f);
 		}
 		x = angle * WIDTH / FOV;

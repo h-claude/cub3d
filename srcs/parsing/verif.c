@@ -6,7 +6,7 @@
 /*   By: hclaude <hclaude@student.42mulhouse.fr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/27 16:37:41 by hclaude           #+#    #+#             */
-/*   Updated: 2024/10/19 00:57:29 by hclaude          ###   ########.fr       */
+/*   Updated: 2024/10/20 13:45:16 by hclaude          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,13 +17,13 @@ float	get_dir(t_cub *cub)
 	char	player;
 
 	player = cub->map[(int)cub->y_p][(int)cub->x_p];
-	if (player == 'N')
-		return (M_PI);
-	if (player == 'S')
-		return (0);
-	if (player == 'E')
-		return (3 * M_PI / 2);
 	if (player == 'W')
+		return (M_PI);
+	if (player == 'E')
+		return (0);
+	if (player == 'N')
+		return (3 * M_PI / 2);
+	if (player == 'S')
 		return (M_PI / 2);
 	return (-1);
 }
