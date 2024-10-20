@@ -1,0 +1,16 @@
+NO ./maps/textures/coconut_NORTH.png
+SO ./maps/textures/coconut_NORTH.png
+WE ./maps/textures/coconut_NORTH.png
+EA ./maps/textures/coconut_NORTH.png
+
+F 18,53,25
+C 153,204,255
+
+111111111111
+1         11
+1          1
+111111111111
+10S000000001
+111111111111
+11         1
+111111111111

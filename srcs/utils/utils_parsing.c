@@ -6,7 +6,7 @@
 /*   By: hclaude <hclaude@student.42mulhouse.fr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/19 00:49:29 by hclaude           #+#    #+#             */
-/*   Updated: 2024/10/19 19:05:06 by hclaude          ###   ########.fr       */
+/*   Updated: 2024/10/20 16:39:35 by hclaude          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,6 +66,9 @@ int32_t	convert_int(char *str)
 	if (!splt_str)
 		return (-1);
 	if (tab_len(splt_str) != 3)
+		return (freetab(splt_str, 0, true), -1);
+	if (!is_number(splt_str[0]) || !is_number(splt_str[1]) \
+		|| !is_number(splt_str[2]))
 		return (freetab(splt_str, 0, true), -1);
 	r = ft_atoi(splt_str[0]);
 	g = ft_atoi(splt_str[1]);

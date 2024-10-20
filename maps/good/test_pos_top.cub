@@ -1,0 +1,21 @@
+NO ./maps/textures/coconut_NORTH.png
+SO ./maps/textures/coconut_NORTH.png
+WE ./maps/textures/coconut_NORTH.png
+EA ./maps/textures/coconut_NORTH.png
+
+F 20,20,20
+C 200,200,200
+
+111
+1N1
+101
+101
+101
+101
+101
+101
+101
+101
+101
+101
+111

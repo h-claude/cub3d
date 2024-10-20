@@ -6,33 +6,32 @@
 /*   By: hclaude <hclaude@student.42mulhouse.fr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/27 15:07:42 by hclaude           #+#    #+#             */
-/*   Updated: 2024/10/19 22:37:39 by hclaude          ###   ########.fr       */
+/*   Updated: 2024/10/20 17:38:16 by hclaude          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "cub.h"
+//void	print_data(t_cub *cub)
+//{
+//	int	i;
 
-void	print_data(t_cub *cub)
-{
-	int	i;
-
-	i = 0;
-	printf("cub->textcol->no = %s\n", cub->textcol->no);
-	printf("cub->textcol->so = %s\n", cub->textcol->so);
-	printf("cub->textcol->we = %s\n", cub->textcol->we);
-	printf("cub->textcol->ea = %s\n", cub->textcol->ea);
-	printf("cub->textcol->f = %d\n", cub->textcol->f);
-	printf("cub->textcol->c = %d\n\n", cub->textcol->c);
-	printf("cub->x_p = %f\n", cub->x_p);
-	printf("cub->y_p = %f\n", cub->y_p);
-	printf("cub->dir_p = %f\n\n", cub->dir_p);
-	printf("MAP :\n");
-	while (cub->map[i])
-	{
-		printf("%s", cub->map[i]);
-		i++;
-	}
-}
+//	i = 0;
+//	printf("cub->textcol->no = %s\n", cub->textcol->no);
+//	printf("cub->textcol->so = %s\n", cub->textcol->so);
+//	printf("cub->textcol->we = %s\n", cub->textcol->we);
+//	printf("cub->textcol->ea = %s\n", cub->textcol->ea);
+//	printf("cub->textcol->f = %d\n", cub->textcol->f);
+//	printf("cub->textcol->c = %d\n\n", cub->textcol->c);
+//	printf("cub->x_p = %f\n", cub->x_p);
+//	printf("cub->y_p = %f\n", cub->y_p);
+//	printf("cub->dir_p = %f\n\n", cub->dir_p);
+//	printf("MAP :\n");
+//	while (cub->map[i])
+//	{
+//		printf("%s", cub->map[i]);
+//		i++;
+//	}
+//}
 
 void	init_structs(t_cub *cub)
 {
@@ -112,7 +111,6 @@ int	main(int argc, char **argv)
 		return (free_structs(&cub), 1);
 	if (check_map(cub))
 		return (free_structs(&cub), 1);
-	print_data(cub);
 	if (launch_raycasting(cub))
 		return (free_structs(&cub), 1);
 	free_structs(&cub);

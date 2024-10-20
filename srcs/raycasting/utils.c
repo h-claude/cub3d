@@ -6,7 +6,7 @@
 /*   By: hclaude <hclaude@student.42mulhouse.fr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/19 22:30:18 by hclaude           #+#    #+#             */
-/*   Updated: 2024/10/20 13:52:32 by hclaude          ###   ########.fr       */
+/*   Updated: 2024/10/20 17:08:42 by hclaude          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@ float	get_distance(t_cub *cub)
 	cub->dr->dist = sqrt(pow(cub->dr->x - cub->x_p, 2) \
 		+ pow(cub->dr->y - cub->y_p, 2));
 	if (cub->dr->dist <= 0)
-		cub->dr->dist += 0.01;
+		cub->dr->dist = 0.01;
 	return (cub->dr->dist);
 }
 
@@ -52,18 +52,15 @@ int	load_textures(t_cub *cub)
 {
 	cub->textcol->t_no = mlx_load_png(cub->textcol->no);
 	if (!cub->textcol->t_no)
-		return (printf("NO\n"), 1);
+		return (printf("Error\nNO\n"), 1);
 	cub->textcol->t_so = mlx_load_png(cub->textcol->so);
 	if (!cub->textcol->t_so)
-		return (mlx_delete_texture(cub->textcol->t_no), printf("SO\n"), 1);
+		return (printf("Error\nSO\n"), 1);
 	cub->textcol->t_we = mlx_load_png(cub->textcol->we);
 	if (!cub->textcol->t_we)
-		return (mlx_delete_texture(cub->textcol->t_no), \
-			mlx_delete_texture(cub->textcol->t_so), printf("WE\n"), 1);
+		return (printf("Error\nWE\n"), 1);
 	cub->textcol->t_ea = mlx_load_png(cub->textcol->ea);
 	if (!cub->textcol->t_ea)
-		return (mlx_delete_texture(cub->textcol->t_no), \
-				mlx_delete_texture(cub->textcol->t_so), \
-				mlx_delete_texture(cub->textcol->t_we), printf("EA\n"), 1);
+		return (printf("Error\nEA\n"), 1);
 	return (0);
 }

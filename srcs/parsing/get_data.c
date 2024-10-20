@@ -6,7 +6,7 @@
 /*   By: hclaude <hclaude@student.42mulhouse.fr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/30 13:22:15 by hclaude           #+#    #+#             */
-/*   Updated: 2024/10/19 19:05:52 by hclaude          ###   ########.fr       */
+/*   Updated: 2024/10/20 17:37:40 by hclaude          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,21 +66,21 @@ int	extract_data(char *str, t_cub *cub)
 	if (str[i] != 'N' && str[i] != 'S'
 		&& str[i] != 'W' && str[i] != 'E' && str[i] != 'F' && str[i] != 'C')
 	{
-		printf("Error\nMap is broken\n");
+		printf("Error\nFile is not good\n");
 		return (1);
 	}
 	if (str[i] == 'N')
-		return (put_data(str, cub, NORTH));
+		return (put_data(str + i, cub, NORTH));
 	else if (str[i] == 'S')
-		return (put_data(str, cub, SOUTH));
+		return (put_data(str + i, cub, SOUTH));
 	else if (str[i] == 'W')
-		return (put_data(str, cub, WEST));
+		return (put_data(str + i, cub, WEST));
 	else if (str[i] == 'E')
-		return (put_data(str, cub, EAST));
+		return (put_data(str + i, cub, EAST));
 	else if (str[i] == 'F')
-		return (put_data(str, cub, FLOOR));
+		return (put_data(str + i, cub, FLOOR));
 	else if (str[i] == 'C')
-		return (put_data(str, cub, CEILING));
+		return (put_data(str + i, cub, CEILING));
 	return (0);
 }
 
@@ -109,7 +109,8 @@ int	get_data(t_cub *cub)
 	done = 0;
 	str = get_next_line(cub->fd);
 	if (!str)
-		return (free_gnl(cub->fd), (void)close(cub->fd), 1);
+		return (free_gnl(cub->fd), \
+			(void)close(cub->fd), printf("Error\nFile is empty\n"), 1);
 	while (str && !done)
 	{
 		if (*str != '\n' && extract_data(str, cub))

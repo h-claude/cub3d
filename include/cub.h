@@ -6,7 +6,7 @@
 /*   By: hclaude <hclaude@student.42mulhouse.fr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/27 14:47:24 by hclaude           #+#    #+#             */
-/*   Updated: 2024/10/19 22:39:16 by hclaude          ###   ########.fr       */
+/*   Updated: 2024/10/20 16:39:25 by hclaude          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -114,5 +114,6 @@ void		freetab(char **tab, size_t len, bool no_len);
 size_t		lstlen(t_list *lst);
 void		free_lst(t_list **lst);
 void		free_structs(t_cub **cub);
+int			is_number(char *str);
 
 #endif

@@ -6,7 +6,7 @@
 /*   By: hclaude <hclaude@student.42mulhouse.fr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/01 23:59:19 by hclaude           #+#    #+#             */
-/*   Updated: 2024/10/20 13:54:45 by hclaude          ###   ########.fr       */
+/*   Updated: 2024/10/20 17:07:54 by hclaude          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -92,7 +92,7 @@ void	draw(void *cub1)
 int	launch_raycasting(t_cub *cub)
 {
 	if (load_textures(cub))
-		return ((void)printf("ERROR\n"), 1);
+		return (1);
 	cub->mlx = mlx_init(WIDTH, HEIGHT, \
 		"THIS IS CUB3D YEAAAAAAAAAAAAAAAAAH", false);
 	if (!cub->mlx)
