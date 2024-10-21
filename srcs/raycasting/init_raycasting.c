@@ -6,7 +6,7 @@
 /*   By: hclaude <hclaude@student.42mulhouse.fr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/01 23:59:19 by hclaude           #+#    #+#             */
-/*   Updated: 2024/10/20 17:07:54 by hclaude          ###   ########.fr       */
+/*   Updated: 2024/10/21 16:01:33 by hclaude          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,6 +87,7 @@ void	draw(void *cub1)
 	cub = (t_cub *)cub1;
 	set_window_name(cub);
 	put_rays(cub);
+	input(cub);
 }
 
 int	launch_raycasting(t_cub *cub)
@@ -103,7 +104,6 @@ int	launch_raycasting(t_cub *cub)
 	if (mlx_image_to_window(cub->mlx, cub->image, 0, 0))
 		return (1);
 	mlx_loop_hook(cub->mlx, draw, cub);
-	mlx_loop_hook(cub->mlx, input, cub);
 	mlx_loop(cub->mlx);
 	return (1);
 }

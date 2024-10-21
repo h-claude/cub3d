@@ -1,7 +1,7 @@
 NAME = cub3D
 
 CC = cc
-CFLAGS 	= -Wall -Wextra -Werror -Wno-unused-function -g3
+CFLAGS 	= -Wall -Wextra -Werror -g3
 LIBFT = -Lturbo_libft -Iturbo_libft/include -lft
 
 GLFW = -I/opt/homebrew/include -L/opt/homebrew/lib -lglfw -ldl -pthread -lm

@@ -6,7 +6,7 @@
 /*   By: hclaude <hclaude@student.42mulhouse.fr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/19 22:27:56 by hclaude           #+#    #+#             */
-/*   Updated: 2024/10/19 22:29:03 by hclaude          ###   ########.fr       */
+/*   Updated: 2024/10/21 16:12:01 by hclaude          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -97,6 +97,7 @@ void	input(void *cub1)
 		cub->dir_p += 0.05;
 	else if (mlx_is_key_down(cub->mlx, MLX_KEY_ESCAPE))
 	{
+		mlx_close_window(cub->mlx);
 		free_structs(&cub);
 		exit(0);
 	}

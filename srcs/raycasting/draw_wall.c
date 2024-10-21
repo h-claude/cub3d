@@ -6,7 +6,7 @@
 /*   By: hclaude <hclaude@student.42mulhouse.fr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/19 22:32:06 by hclaude           #+#    #+#             */
-/*   Updated: 2024/10/20 13:54:26 by hclaude          ###   ########.fr       */
+/*   Updated: 2024/10/21 16:12:58 by hclaude          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,13 +20,14 @@ void	draw_wall(float angle, t_cub *cub)
 	int			x_width;
 
 	x = angle * WIDTH / FOV;
-	y = 0;
+	y = -1;
 	x_width = x + 6;
 	wall_color = 0;
-	while (y < HEIGHT)
+	while (++y < HEIGHT)
 	{
-		wall_color = color_dist(get_text_color(cub, cub->dr->wall_height, y), \
-			cub->dr->dist);
+		if (y >= cub->dr->wall_top && y <= cub->dr->wall_bot)
+			wall_color = color_dist(get_text_color(\
+				cub, cub->dr->wall_height, y), cub->dr->dist);
 		while (x <= x_width && x < WIDTH)
 		{
 			if (y < cub->dr->wall_top)
@@ -37,7 +38,6 @@ void	draw_wall(float angle, t_cub *cub)
 				mlx_put_pixel(cub->image, x++, y, cub->textcol->f);
 		}
 		x = angle * WIDTH / FOV;
-		y++;
 	}
 }
 
@@ -51,11 +51,14 @@ void	put_wall(float angle, t_cub *cub)
 
 void	launch_rays(t_cub *cub)
 {
+	size_t	lenght;
+
 	while (!cub->hw && get_distance(cub) < 10)
 	{
+		lenght = ft_strlen(cub->map[(int)cub->dr->y]);
 		cub->dr->x += cub->dr->dir_x * 0.01;
 		if ((size_t)cub->dr->y < cub->map_len \
-			&& (size_t)cub->dr->x < ft_strlen(cub->map[(int)cub->dr->y]) \
+			&& (size_t)cub->dr->x < lenght \
 			&& cub->map[(int)cub->dr->y][(int)cub->dr->x] == '1')
 		{
 			cub->we = true;
@@ -63,7 +66,7 @@ void	launch_rays(t_cub *cub)
 		}
 		cub->dr->y += cub->dr->dir_y * 0.01;
 		if (!cub->hw && (size_t)cub->dr->y < cub->map_len \
-			&& (size_t)cub->dr->x < ft_strlen(cub->map[(int)cub->dr->y]) \
+			&& (size_t)cub->dr->x < lenght \
 			&& cub->map[(int)cub->dr->y][(int)cub->dr->x] == '1')
 		{
 			cub->we = false;
