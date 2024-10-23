@@ -6,7 +6,7 @@
 /*   By: hclaude <hclaude@student.42mulhouse.fr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/30 13:22:15 by hclaude           #+#    #+#             */
-/*   Updated: 2024/10/23 15:32:49 by hclaude          ###   ########.fr       */
+/*   Updated: 2024/10/23 16:09:54 by hclaude          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -110,11 +110,11 @@ int	get_data(t_cub *cub)
 	str = get_next_line(cub->fd);
 	if (!str)
 		return (free_gnl(cub->fd), \
-			(void)close(cub->fd), printf("Error\nFile is empty\n"), 1);
+			(void)printf("Error\nFile is empty\n"), 1);
 	while (str && !done)
 	{
 		if (*str != '\n' && extract_data(str, cub))
-			return (free(str), free_gnl(cub->fd), (void)close(cub->fd), 1);
+			return (free(str), free_gnl(cub->fd), 1);
 		free(str);
 		done = data_is_collected(cub);
 		if (!done)
