@@ -6,7 +6,7 @@
 /*   By: hclaude <hclaude@student.42mulhouse.fr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/30 13:22:15 by hclaude           #+#    #+#             */
-/*   Updated: 2024/10/20 17:37:40 by hclaude          ###   ########.fr       */
+/*   Updated: 2024/10/23 15:32:49 by hclaude          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -121,8 +121,10 @@ int	get_data(t_cub *cub)
 			str = get_next_line(cub->fd);
 	}
 	if (check_data(cub))
-		return (free_gnl(cub->fd), (void)close(cub->fd), 1);
+		return (free_gnl(cub->fd), 1);
 	if (parse_map(cub))
-		return (free_gnl(cub->fd), (void)close(cub->fd), 1);
-	return (0);
+		return (free_gnl(cub->fd), 1);
+	if (check_last_data(cub))
+		return (free_gnl(cub->fd), 1);
+	return (free_gnl(cub->fd), 0);
 }

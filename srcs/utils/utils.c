@@ -6,11 +6,29 @@
 /*   By: hclaude <hclaude@student.42mulhouse.fr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/19 00:54:17 by hclaude           #+#    #+#             */
-/*   Updated: 2024/10/20 16:45:30 by hclaude          ###   ########.fr       */
+/*   Updated: 2024/10/23 15:32:57 by hclaude          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "cub.h"
+
+int	check_last_data(t_cub *cub)
+{
+	char	*str;
+
+	str = get_next_line(cub->fd);
+	while (str)
+	{
+		if (*str != '\n')
+		{
+			printf("Error\nWrong character after map\n");
+			return (free(str), 1);
+		}
+		free(str);
+		str = get_next_line(cub->fd);
+	}
+	return (0);
+}
 
 int	is_number(char *str)
 {

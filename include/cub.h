@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cub.h                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aurban <aurban@student.42.fr>              +#+  +:+       +#+        */
+/*   By: hclaude <hclaude@student.42mulhouse.fr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/27 14:47:24 by hclaude           #+#    #+#             */
-/*   Updated: 2024/10/23 13:42:41 by aurban           ###   ########.fr       */
+/*   Updated: 2024/10/23 15:33:25 by hclaude          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,6 +82,7 @@ typedef struct cub
 }	t_cub;
 
 // parsing
+
 int			start_parsing(t_cub *cub, char *file);
 int32_t		convert_int(char *str);
 int			data_is_collected(t_cub *cub);
@@ -100,6 +101,7 @@ int			is_wrong_character(char **map);
 int			is_player(char player);
 
 // raycasting
+
 int			launch_raycasting(t_cub *cub);
 void		set_window_name(t_cub *cub);
 float		get_distance(t_cub *cub);
@@ -111,11 +113,13 @@ uint32_t	get_text_color(t_cub *cub, float height, int y);
 uint32_t	color_dist(uint32_t color, float distance);
 
 // utils
+
 void		freetab(char **tab, size_t len, bool no_len);
 size_t		lstlen(t_list *lst);
 void		free_lst(t_list **lst);
 void		free_structs(t_cub **cub);
 int			is_number(char *str);
+int			check_last_data(t_cub *cub);
 
 // Bonus
 
