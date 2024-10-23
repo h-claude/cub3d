@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   input.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aurban <aurban@student.42.fr>              +#+  +:+       +#+        */
+/*   By: hclaude <hclaude@student.42mulhouse.fr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/19 22:27:56 by hclaude           #+#    #+#             */
-/*   Updated: 2024/10/23 13:23:59 by aurban           ###   ########.fr       */
+/*   Updated: 2024/10/23 21:44:58 by hclaude          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,10 @@ int	player_can_reach(float y, float x, t_cub *cub)
 	x1 = x1 / 24;
 	if (y1 < 0 || x1 < 0 || (size_t)y1 > cub->map_len \
 		|| !cub->map[y1] || ft_strlen(cub->map[y1]) < (size_t)x1)
+		return (0);
+	if (cub->map[y1][(int)cub->x_p] == '1')
+		return (0);
+	if (cub->map[(int)cub->y_p][x1] == '1')
 		return (0);
 	if (cub->map[y1][x1] == '1')
 		return (0);

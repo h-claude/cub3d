@@ -6,7 +6,7 @@
 /*   By: hclaude <hclaude@student.42mulhouse.fr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/19 00:57:38 by hclaude           #+#    #+#             */
-/*   Updated: 2024/10/19 00:58:49 by hclaude          ###   ########.fr       */
+/*   Updated: 2024/10/23 21:44:20 by hclaude          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,8 +57,8 @@ int	is_multiple_player(t_cub *cub)
 		{
 			if (is_player(cub->map[y][x]))
 			{
-				cub->y_p = (float)y;
-				cub->x_p = (float)x;
+				cub->y_p = (float)y + 0.5;
+				cub->x_p = (float)x + 0.5;
 				player++;
 			}
 			x++;
