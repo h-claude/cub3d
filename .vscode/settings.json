@@ -1,0 +1,12 @@
+{
+    "files.associations": {
+        "*.tcc": "c",
+        "algorithm": "c",
+        "memory": "c",
+        "random": "c",
+        "iosfwd": "c",
+        "numeric": "c",
+        "ostream": "c",
+        "streambuf": "c"
+    }
+}

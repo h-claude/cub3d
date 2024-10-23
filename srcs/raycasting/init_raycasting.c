@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   init_raycasting.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hclaude <hclaude@student.42mulhouse.fr>    +#+  +:+       +#+        */
+/*   By: aurban <aurban@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/01 23:59:19 by hclaude           #+#    #+#             */
-/*   Updated: 2024/10/21 16:01:33 by hclaude          ###   ########.fr       */
+/*   Updated: 2024/10/23 13:33:55 by aurban           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -103,6 +103,7 @@ int	launch_raycasting(t_cub *cub)
 		return (1);
 	if (mlx_image_to_window(cub->mlx, cub->image, 0, 0))
 		return (1);
+	mlx_key_hook(cub->mlx, key_press_hook, cub);
 	mlx_loop_hook(cub->mlx, draw, cub);
 	mlx_loop(cub->mlx);
 	return (1);

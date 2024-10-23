@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   input.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hclaude <hclaude@student.42mulhouse.fr>    +#+  +:+       +#+        */
+/*   By: aurban <aurban@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/19 22:27:56 by hclaude           #+#    #+#             */
-/*   Updated: 2024/10/21 16:12:01 by hclaude          ###   ########.fr       */
+/*   Updated: 2024/10/23 13:23:59 by aurban           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,11 +86,12 @@ void	input_move(t_cub *cub)
 
 void	input(void *cub1)
 {
-	t_cub	*cub;
+	t_cub		*cub;
 
 	cub = (t_cub *)cub1;
 	input_move(cub);
 	input_strafe(cub);
+	input_mouse_rotation(cub, rotation_mouse_sate(-1));
 	if (mlx_is_key_down(cub->mlx, MLX_KEY_LEFT))
 		cub->dir_p -= 0.05;
 	else if (mlx_is_key_down(cub->mlx, MLX_KEY_RIGHT))

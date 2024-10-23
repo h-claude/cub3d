@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hclaude <hclaude@student.42mulhouse.fr>    +#+  +:+       +#+        */
+/*   By: aurban <aurban@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/27 15:07:42 by hclaude           #+#    #+#             */
-/*   Updated: 2024/10/20 17:38:16 by hclaude          ###   ########.fr       */
+/*   Updated: 2024/10/23 12:14:18 by aurban           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -114,4 +114,5 @@ int	main(int argc, char **argv)
 	if (launch_raycasting(cub))
 		return (free_structs(&cub), 1);
 	free_structs(&cub);
+	return (0);
 }

@@ -3,16 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   verif.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hclaude <hclaude@student.42mulhouse.fr>    +#+  +:+       +#+        */
+/*   By: aurban <aurban@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/27 16:37:41 by hclaude           #+#    #+#             */
-/*   Updated: 2024/10/20 13:45:16 by hclaude          ###   ########.fr       */
+/*   Updated: 2024/10/23 12:08:51 by aurban           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "cub.h"
 
-float	get_dir(t_cub *cub)
+float	get_direction(t_cub *cub)
 {
 	char	player;
 
@@ -36,7 +36,7 @@ int	check_map(t_cub *cub)
 		return ((void)printf("Error\nThere is a wrong character\n"), 1);
 	if (flood_fill(cub->map, cub->y_p, cub->x_p))
 		return ((void)printf("Error\nThere is a big hole in the map\n"), 1);
-	cub->dir_p = get_dir(cub);
+	cub->dir_p = get_direction(cub);
 	return (0);
 }
 

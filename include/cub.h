@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cub.h                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hclaude <hclaude@student.42mulhouse.fr>    +#+  +:+       +#+        */
+/*   By: aurban <aurban@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/27 14:47:24 by hclaude           #+#    #+#             */
-/*   Updated: 2024/10/20 16:39:25 by hclaude          ###   ########.fr       */
+/*   Updated: 2024/10/23 13:42:41 by aurban           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,6 +26,7 @@
 # define WIDTH 1920
 # define HEIGHT 1080
 # define MOVE_SPEED 0.05
+# define MOUSE_SENSITIVITY 0.00075
 
 typedef enum e_data_type
 {
@@ -115,5 +116,12 @@ size_t		lstlen(t_list *lst);
 void		free_lst(t_list **lst);
 void		free_structs(t_cub **cub);
 int			is_number(char *str);
+
+// Bonus
+
+void		key_press_hook(mlx_key_data_t key_data, void *param);
+void		input_mouse_rotation(t_cub *cub, bool allow_mouse);
+bool		rotation_mouse_sate(int b);
+
 
 #endif
