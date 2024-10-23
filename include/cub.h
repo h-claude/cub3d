@@ -6,7 +6,7 @@
 /*   By: hclaude <hclaude@student.42mulhouse.fr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/27 14:47:24 by hclaude           #+#    #+#             */
-/*   Updated: 2024/10/23 15:33:25 by hclaude          ###   ########.fr       */
+/*   Updated: 2024/10/23 16:15:26 by hclaude          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -126,6 +126,5 @@ int			check_last_data(t_cub *cub);
 void		key_press_hook(mlx_key_data_t key_data, void *param);
 void		input_mouse_rotation(t_cub *cub, bool allow_mouse);
 bool		rotation_mouse_sate(int b);
-
 
 #endif
