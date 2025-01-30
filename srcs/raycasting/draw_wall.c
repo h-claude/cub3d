@@ -6,7 +6,7 @@
 /*   By: hclaude <hclaude@student.42mulhouse.fr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/19 22:32:06 by hclaude           #+#    #+#             */
-/*   Updated: 2024/10/21 16:12:58 by hclaude          ###   ########.fr       */
+/*   Updated: 2025/01/30 15:15:52 by hclaude          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,14 +51,14 @@ void	put_wall(float angle, t_cub *cub)
 
 void	launch_rays(t_cub *cub)
 {
-	size_t	lenght;
+	size_t	length;
 
+	length = ft_strlen(cub->map[(int)cub->dr->y]);
 	while (!cub->hw && get_distance(cub) < 10)
 	{
-		lenght = ft_strlen(cub->map[(int)cub->dr->y]);
 		cub->dr->x += cub->dr->dir_x * 0.01;
 		if ((size_t)cub->dr->y < cub->map_len \
-			&& (size_t)cub->dr->x < lenght \
+			&& (size_t)cub->dr->x < length \
 			&& cub->map[(int)cub->dr->y][(int)cub->dr->x] == '1')
 		{
 			cub->we = true;
@@ -66,7 +66,7 @@ void	launch_rays(t_cub *cub)
 		}
 		cub->dr->y += cub->dr->dir_y * 0.01;
 		if (!cub->hw && (size_t)cub->dr->y < cub->map_len \
-			&& (size_t)cub->dr->x < lenght \
+			&& (size_t)cub->dr->x < length \
 			&& cub->map[(int)cub->dr->y][(int)cub->dr->x] == '1')
 		{
 			cub->we = false;
@@ -86,7 +86,6 @@ void	put_rays(t_cub *cub)
 	ray = 0;
 	while (ray < FOV)
 	{
-		normalize_angle(&cub->dir_p);
 		ray_angle = cub->dir_p + (ray - (FOV / 2)) * (M_PI / 180);
 		cub->dr->dir_y = sin(ray_angle);
 		cub->dr->dir_x = cos(ray_angle);

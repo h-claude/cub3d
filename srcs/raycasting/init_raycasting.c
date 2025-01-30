@@ -3,14 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   init_raycasting.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aurban <aurban@student.42.fr>              +#+  +:+       +#+        */
+/*   By: hclaude <hclaude@student.42mulhouse.fr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/01 23:59:19 by hclaude           #+#    #+#             */
-/*   Updated: 2024/10/23 13:33:55 by aurban           ###   ########.fr       */
+/*   Updated: 2025/01/30 15:24:45 by hclaude          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "cub.h"
+#include <stdio.h>
+#include <time.h>
 
 uint32_t	color_dist(uint32_t color, float distance)
 {
@@ -80,6 +82,25 @@ uint32_t	get_text_color(t_cub *cub, float height, int y)
 	return (text_color);
 }
 
+void	fps_counter()
+{
+	static int		frame_count = 0;
+	static time_t	start_time = 0;
+	time_t			current_time;
+
+	frame_count++;
+	current_time = time(NULL);
+	if (start_time == 0)
+		start_time = current_time;
+	if (current_time - start_time >= 1)
+	{
+		printf("\rFPS: %d", frame_count);
+		fflush(stdout);
+		frame_count = 0;
+		start_time = current_time;
+	}
+}
+
 void	draw(void *cub1)
 {
 	t_cub	*cub;
@@ -87,6 +108,7 @@ void	draw(void *cub1)
 	cub = (t_cub *)cub1;
 	set_window_name(cub);
 	put_rays(cub);
+	fps_counter();
 	input(cub);
 }
 
