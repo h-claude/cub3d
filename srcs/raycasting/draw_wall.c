@@ -15,29 +15,44 @@
 void	draw_wall(float angle, t_cub *cub)
 {
 	uint32_t	wall_color;
+	uint32_t	ceiling_color;
+	uint32_t	floor_color;
 	int			x;
 	int			y;
 	int			x_width;
+	int			wall_start;
+	int			wall_end;
 
 	x = angle * WIDTH / FOV;
-	y = -1;
 	x_width = x + 6;
-	wall_color = 0;
+	
+	// Pre-calculate colors once per column
+	ceiling_color = cub->textcol->c;
+	floor_color = cub->textcol->f;
+	wall_start = (int)cub->dr->wall_top;
+	wall_end = (int)cub->dr->wall_bot;
+	
+	// Clamp wall bounds
+	if (wall_start < 0) wall_start = 0;
+	if (wall_end >= HEIGHT) wall_end = HEIGHT - 1;
+	
+	y = -1;
 	while (++y < HEIGHT)
 	{
-		if (y >= cub->dr->wall_top && y <= cub->dr->wall_bot)
-			wall_color = color_dist(get_text_color(\
-				cub, cub->dr->wall_height, y), cub->dr->dist);
+		if (y < wall_start)
+			wall_color = ceiling_color;
+		else if (y > wall_end)
+			wall_color = floor_color;
+		else
+			wall_color = color_dist(get_text_color(cub, cub->dr->wall_height, y), cub->dr->dist);
+		
+		// Draw the horizontal line for this y coordinate
+		x = angle * WIDTH / FOV;
 		while (x <= x_width && x < WIDTH)
 		{
-			if (y < cub->dr->wall_top)
-				mlx_put_pixel(cub->image, x++, y, cub->textcol->c);
-			else if (y >= cub->dr->wall_top && y <= cub->dr->wall_bot)
-				mlx_put_pixel(cub->image, x++, y, wall_color);
-			else
-				mlx_put_pixel(cub->image, x++, y, cub->textcol->f);
+			mlx_put_pixel(cub->image, x, y, wall_color);
+			x++;
 		}
-		x = angle * WIDTH / FOV;
 	}
 }
 
@@ -51,25 +66,30 @@ void	put_wall(float angle, t_cub *cub)
 
 void	launch_rays(t_cub *cub)
 {
-	size_t	length;
+	float	step_size;
+	float	max_dist;
+	int		map_x, map_y;
 
-	length = ft_strlen(cub->map[(int)cub->dr->y]);
-	while (!cub->hw && get_distance(cub) < 10)
+	step_size = 0.02;
+	max_dist = 10.0;
+	while (!cub->hw && (cub->dr->x - cub->x_p) * (cub->dr->x - cub->x_p) + 
+		(cub->dr->y - cub->y_p) * (cub->dr->y - cub->y_p) < max_dist * max_dist)
 	{
-		cub->dr->x += cub->dr->dir_x * 0.01;
-		if ((size_t)cub->dr->y < cub->map_len \
-			&& (size_t)cub->dr->x < length \
-			&& cub->map[(int)cub->dr->y][(int)cub->dr->x] == '1')
+		cub->dr->x += cub->dr->dir_x * step_size;
+		cub->dr->y += cub->dr->dir_y * step_size;
+		
+		map_x = (int)cub->dr->x;
+		map_y = (int)cub->dr->y;
+		
+		if (map_y >= 0 && (size_t)map_y < cub->map_len && 
+			map_x >= 0 && (size_t)map_x < ft_strlen(cub->map[map_y]) &&
+			cub->map[map_y][map_x] == '1')
 		{
-			cub->we = true;
-			cub->hw = true;
-		}
-		cub->dr->y += cub->dr->dir_y * 0.01;
-		if (!cub->hw && (size_t)cub->dr->y < cub->map_len \
-			&& (size_t)cub->dr->x < length \
-			&& cub->map[(int)cub->dr->y][(int)cub->dr->x] == '1')
-		{
-			cub->we = false;
+			// Determine if we hit a vertical or horizontal wall
+			if (fabs(cub->dr->x - (float)map_x - 0.5) > fabs(cub->dr->y - (float)map_y - 0.5))
+				cub->we = false;
+			else
+				cub->we = true;
 			cub->hw = true;
 		}
 	}
@@ -79,6 +99,8 @@ void	put_rays(t_cub *cub)
 {
 	float	ray;
 	float	ray_angle;
+	float	cos_cache, sin_cache;
+	float	angle_correction;
 
 	cub->dr->x = cub->x_p;
 	cub->dr->y = cub->y_p;
@@ -87,14 +109,25 @@ void	put_rays(t_cub *cub)
 	while (ray < FOV)
 	{
 		ray_angle = cub->dir_p + (ray - (FOV / 2)) * (M_PI / 180);
-		cub->dr->dir_y = sin(ray_angle);
-		cub->dr->dir_x = cos(ray_angle);
+		cos_cache = cos(ray_angle);
+		sin_cache = sin(ray_angle);
+		
+		cub->dr->dir_y = sin_cache;
+		cub->dr->dir_x = cos_cache;
 		cub->dr->x = cub->x_p;
 		cub->dr->y = cub->y_p;
 		cub->hw = false;
 		launch_rays(cub);
-		get_distance(cub);
-		cub->dr->dist *= fabs(cos(ray_angle - cub->dir_p));
+		
+		// Cache distance calculation
+		cub->dr->dist = sqrt((cub->dr->x - cub->x_p) * (cub->dr->x - cub->x_p) + 
+						   (cub->dr->y - cub->y_p) * (cub->dr->y - cub->y_p));
+		if (cub->dr->dist <= 0)
+			cub->dr->dist = 0.01;
+		
+		// Apply fisheye correction
+		angle_correction = ray_angle - cub->dir_p;
+		cub->dr->dist *= fabs(cos(angle_correction));
 		put_wall(ray, cub);
 		ray += 0.2;
 	}

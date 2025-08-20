@@ -22,10 +22,11 @@ void	normalize_angle(float *angle)
 
 float	get_distance(t_cub *cub)
 {
-	cub->dr->dist = sqrt(pow(cub->dr->x - cub->x_p, 2) \
-		+ pow(cub->dr->y - cub->y_p, 2));
-	if (cub->dr->dist <= 0)
-		cub->dr->dist = 0.01;
+	float dx = cub->dr->x - cub->x_p;
+	float dy = cub->dr->y - cub->y_p;
+	cub->dr->dist = sqrt(dx * dx + dy * dy);
+	if (cub->dr->dist <= 0.0f)
+		cub->dr->dist = 0.01f;
 	return (cub->dr->dist);
 }
 

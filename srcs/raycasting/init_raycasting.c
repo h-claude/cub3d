@@ -24,32 +24,44 @@ uint32_t	color_dist(uint32_t color, float distance)
 	r = (color) >> 24;
 	g = (color) >> 16;
 	b = (color) >> 8;
-	n_distance = distance / 2;
-	if (n_distance < 1)
-		n_distance = 1;
-	r = r / (n_distance);
-	g = g / (n_distance);
-	b = b / (n_distance);
+	
+	// Optimize distance calculation
+	n_distance = distance * 0.5f; // Use multiplication instead of division
+	if (n_distance < 1.0f)
+		n_distance = 1.0f;
+	
+	// Use faster division approximation for color scaling
+	float inv_distance = 1.0f / n_distance;
+	r = (uint8_t)(r * inv_distance);
+	g = (uint8_t)(g * inv_distance);
+	b = (uint8_t)(b * inv_distance);
+	
 	return (r << 24 | g << 16 | b << 8 | 255);
 }
 
 uint32_t	get_pixel(t_cub *cub, mlx_texture_t *text, float height, int y)
 {
 	uint32_t		color;
-	uint64_t		x_text;
-	uint64_t		y_text;
-	double			useless;
+	uint32_t		x_text;
+	uint32_t		y_text;
 	int				i;
+	float			wall_hit;
 
+	// Use integer calculations where possible
 	if (cub->we)
-		x_text = (int)(modf(cub->dr->y, &useless) * text->width) % text->width;
+		wall_hit = cub->dr->y - (int)cub->dr->y;
 	else
-		x_text = (int)(modf(cub->dr->x, &useless) * text->width) % text->width;
-	y_text = (int)((y - (HEIGHT / 2) + (height / 2)) * text->height / height);
-	if (y_text < 0)
-		y_text = 0;
+		wall_hit = cub->dr->x - (int)cub->dr->x;
+	
+	x_text = (uint32_t)(wall_hit * text->width);
+	if (x_text >= text->width)
+		x_text = text->width - 1;
+	
+	// Optimize y_text calculation
+	y_text = (uint32_t)((y - (HEIGHT >> 1) + (height * 0.5f)) * text->height / height);
 	if (y_text >= text->height)
 		y_text = text->height - 1;
+		
 	i = (y_text * text->width + x_text) * text->bytes_per_pixel;
 	color = text->pixels[i] << 24 | text->pixels[i + 1] << 16 \
 		| text->pixels[i + 2] << 8 | 255;
