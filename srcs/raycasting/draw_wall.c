@@ -23,8 +23,8 @@ void	draw_wall(float angle, t_cub *cub)
 	int			wall_start;
 	int			wall_end;
 
-	x = angle * WIDTH / FOV;
-	x_width = x + 6;
+	x = angle * WIDTH_DIV_FOV;
+	x_width = x + COLUMN_WIDTH;
 	
 	// Pre-calculate colors once per column
 	ceiling_color = cub->textcol->c;
@@ -47,7 +47,7 @@ void	draw_wall(float angle, t_cub *cub)
 			wall_color = color_dist(get_text_color(cub, cub->dr->wall_height, y), cub->dr->dist);
 		
 		// Draw the horizontal line for this y coordinate
-		x = angle * WIDTH / FOV;
+		x = angle * WIDTH_DIV_FOV;
 		while (x <= x_width && x < WIDTH)
 		{
 			mlx_put_pixel(cub->image, x, y, wall_color);
@@ -59,34 +59,44 @@ void	draw_wall(float angle, t_cub *cub)
 void	put_wall(float angle, t_cub *cub)
 {
 	cub->dr->wall_height = HEIGHT / cub->dr->dist;
-	cub->dr->wall_top = (HEIGHT / 2) - cub->dr->wall_height / 2;
-	cub->dr->wall_bot = (HEIGHT / 2) + cub->dr->wall_height / 2;
+	cub->dr->wall_top = HEIGHT_DIV2 - cub->dr->wall_height * 0.5f;
+	cub->dr->wall_bot = HEIGHT_DIV2 + cub->dr->wall_height * 0.5f;
 	draw_wall(angle, cub);
 }
 
 void	launch_rays(t_cub *cub)
 {
-	float	step_size;
-	float	max_dist;
+	float	max_dist_sq; // Use squared distance to avoid sqrt
 	int		map_x, map_y;
+	int		max_iterations;
+	float	dx, dy;
 
-	step_size = 0.02;
-	max_dist = 10.0;
-	while (!cub->hw && (cub->dr->x - cub->x_p) * (cub->dr->x - cub->x_p) + 
-		(cub->dr->y - cub->y_p) * (cub->dr->y - cub->y_p) < max_dist * max_dist)
+	max_dist_sq = MAX_RAY_DISTANCE * MAX_RAY_DISTANCE;
+	max_iterations = 500; // Prevent infinite loops
+	
+	while (!cub->hw && --max_iterations > 0)
 	{
-		cub->dr->x += cub->dr->dir_x * step_size;
-		cub->dr->y += cub->dr->dir_y * step_size;
+		cub->dr->x += cub->dr->dir_x * RAY_STEP_SIZE;
+		cub->dr->y += cub->dr->dir_y * RAY_STEP_SIZE;
+		
+		// Check distance without sqrt
+		dx = cub->dr->x - cub->x_p;
+		dy = cub->dr->y - cub->y_p;
+		if (dx * dx + dy * dy > max_dist_sq)
+			break;
 		
 		map_x = (int)cub->dr->x;
 		map_y = (int)cub->dr->y;
 		
-		if (map_y >= 0 && (size_t)map_y < cub->map_len && 
-			map_x >= 0 && (size_t)map_x < ft_strlen(cub->map[map_y]) &&
-			cub->map[map_y][map_x] == '1')
+		// Bounds check with early exit
+		if (map_y < 0 || (size_t)map_y >= cub->map_len || 
+			map_x < 0 || (size_t)map_x >= ft_strlen(cub->map[map_y]))
+			break;
+			
+		if (cub->map[map_y][map_x] == '1')
 		{
 			// Determine if we hit a vertical or horizontal wall
-			if (fabs(cub->dr->x - (float)map_x - 0.5) > fabs(cub->dr->y - (float)map_y - 0.5))
+			if (fabs(cub->dr->x - (float)map_x - 0.5f) > fabs(cub->dr->y - (float)map_y - 0.5f))
 				cub->we = false;
 			else
 				cub->we = true;
@@ -129,6 +139,6 @@ void	put_rays(t_cub *cub)
 		angle_correction = ray_angle - cub->dir_p;
 		cub->dr->dist *= fabs(cos(angle_correction));
 		put_wall(ray, cub);
-		ray += 0.2;
+		ray += RAY_INCREMENT;
 	}
 }

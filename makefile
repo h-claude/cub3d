@@ -5,6 +5,7 @@ LIBMLX_PATH := ./MLX42
 
 CC = cc
 CFLAGS 	= -Wall -Wextra -Werror -g3
+OPTFLAGS = -O2 -march=native -ffast-math
 LIBFT = -Lturbo_libft -Iturbo_libft/include -lft
 
 GLFW = -I/opt/homebrew/include -L/opt/homebrew/lib -lglfw -ldl -pthread -lm
@@ -21,6 +22,11 @@ OBJS = $(patsubst %.c, $(OBJDIR)/%.o, $(SRCS))
 INCLUDE = -I./include
 
 all : $(NAME)
+
+# Optimized build target for better performance
+optimized: CFLAGS += $(OPTFLAGS)
+optimized: $(NAME)
+	@echo "\033[32mcub3D compiled with optimizations\033[0m"
 
 $(BIN_LIBMLX):
 	@cmake $(LIBMLX_PATH) -B $(LIBMLX_PATH)/build && make -sC $(LIBMLX_PATH)/build -j4
@@ -46,4 +52,4 @@ fclean: clean
 
 re:	fclean all
 
-.PHONY: all clean fclean re
+.PHONY: all clean fclean re optimized

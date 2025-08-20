@@ -25,8 +25,16 @@
 # define FOV 60
 # define WIDTH 1920
 # define HEIGHT 1080
+# define HEIGHT_DIV2 540
+# define WIDTH_DIV_FOV 32
 # define MOVE_SPEED 0.05
 # define MOUSE_SENSITIVITY 0.00075
+
+// Optimization constants
+# define RAY_STEP_SIZE 0.02f
+# define MAX_RAY_DISTANCE 10.0f
+# define RAY_INCREMENT 0.1f
+# define COLUMN_WIDTH 3
 
 typedef enum e_data_type
 {
@@ -63,6 +71,11 @@ typedef struct s_dr
 	float	wall_height;
 	float	wall_top;
 	float	wall_bot;
+	// optimization cache
+	float	cached_cos;
+	float	cached_sin;
+	int		last_map_x;
+	int		last_map_y;
 }	t_dr;
 
 typedef struct cub

@@ -14,10 +14,11 @@
 
 void	normalize_angle(float *angle)
 {
-	if (*angle < 0)
-		*angle += 2 * M_PI;
-	if (*angle > 2 * M_PI)
-		*angle -= 2 * M_PI;
+	// More efficient modular arithmetic
+	while (*angle < 0)
+		*angle += 2.0f * M_PI;
+	while (*angle >= 2.0f * M_PI)
+		*angle -= 2.0f * M_PI;
 }
 
 float	get_distance(t_cub *cub)
@@ -32,21 +33,29 @@ float	get_distance(t_cub *cub)
 
 void	set_window_name(t_cub *cub)
 {
-	char	*name;
+	static float	last_dir = -1.0f;
+	char			*name;
 
+	// Only update window name if direction changed significantly  
+	if (fabs(cub->dir_p - last_dir) < 0.1f)
+		return;
+	
 	if (cub->dir_p < 0)
-		cub->dir_p += 2 * M_PI;
-	if (cub->dir_p > 2 * M_PI)
-		cub->dir_p -= 2 * M_PI;
+		cub->dir_p += 2.0f * M_PI;
+	if (cub->dir_p > 2.0f * M_PI)
+		cub->dir_p -= 2.0f * M_PI;
+		
 	if (cub->dir_p >= 0 && cub->dir_p < M_PI / 2)
 		name = "EAST";
 	else if (cub->dir_p >= M_PI / 2 && cub->dir_p < M_PI)
 		name = "SOUTH";
 	else if (cub->dir_p >= M_PI && cub->dir_p < 3 * M_PI / 2)
 		name = "WEST";
-	else if (cub->dir_p >= 3 * M_PI / 2 && cub->dir_p < 2 * M_PI)
+	else
 		name = "NORTH";
+		
 	mlx_set_window_title(cub->mlx, name);
+	last_dir = cub->dir_p;
 }
 
 int	load_textures(t_cub *cub)

@@ -58,7 +58,7 @@ uint32_t	get_pixel(t_cub *cub, mlx_texture_t *text, float height, int y)
 		x_text = text->width - 1;
 	
 	// Optimize y_text calculation
-	y_text = (uint32_t)((y - (HEIGHT >> 1) + (height * 0.5f)) * text->height / height);
+	y_text = (uint32_t)((y - HEIGHT_DIV2 + (height * 0.5f)) * text->height / height);
 	if (y_text >= text->height)
 		y_text = text->height - 1;
 		
@@ -101,15 +101,19 @@ void	fps_counter()
 	time_t			current_time;
 
 	frame_count++;
-	current_time = time(NULL);
-	if (start_time == 0)
-		start_time = current_time;
-	if (current_time - start_time >= 1)
+	// Check FPS less frequently to reduce system call overhead
+	if ((frame_count % 30) == 0) // Check every 30 frames instead of every frame
 	{
-		printf("\rFPS: %d", frame_count);
-		fflush(stdout);
-		frame_count = 0;
-		start_time = current_time;
+		current_time = time(NULL);
+		if (start_time == 0)
+			start_time = current_time;
+		if (current_time - start_time >= 1)
+		{
+			printf("\rFPS: %d", frame_count);
+			fflush(stdout);
+			frame_count = 0;
+			start_time = current_time;
+		}
 	}
 }
 
