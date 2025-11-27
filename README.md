@@ -200,8 +200,8 @@ make re     # Rebuild the project
 
 ## 👥 Contributors
 
-- **hclaude** - [@hclaude](https://github.com/h-claude) - 42 Mulhouse
-- **aurban** - 42
+- **hclaude** - [@h-claude](https://github.com/h-claude) - 42 Mulhouse
+- **aurban** - 42 Student
 
 ## 📚 Resources
 
