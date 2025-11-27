@@ -201,7 +201,7 @@ make re     # Rebuild the project
 ## 👥 Contributors
 
 - **hclaude** - [@h-claude](https://github.com/h-claude) - 42 Mulhouse
-- **aurban** - [@aurban] (https://github.com/Anantiz) - 42 Mulhouse
+- **aurban** - [@aurban](https://github.com/Anantiz) - 42 Mulhouse
 
 ## 📚 Resources
 
