@@ -207,12 +207,3 @@ make re     # Rebuild the project
 
 - [Lode's Raycasting Tutorial](https://lodev.org/cgtutor/raycasting.html)
 - [MLX42 Documentation](https://github.com/codam-coding-college/MLX42)
-- [42 Cursus](https://42.fr/)
-
-## 📄 License
-
-This project is part of the 42 School curriculum. Feel free to use it as a reference for your own cub3D implementation.
-
----
-
-Made with ❤️ at [42 Mulhouse](https://42mulhouse.fr/)
