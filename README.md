@@ -126,7 +126,7 @@ make
 | `D` | Strafe right |
 | `←` | Rotate left |
 | `→` | Rotate right |
-| `M` | Toggle mouse rotation |
+| `SPACE` | Toggle mouse rotation |
 | `ESC` | Exit game |
 
 ## 🗺️ Map Format
