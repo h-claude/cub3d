@@ -129,6 +129,7 @@ void		refresh_hud(t_cub *cub);
 void		update_ram_mb(t_cub *cub);
 void		set_window_name(t_cub *cub);
 float		get_distance(t_cub *cub);
+float		get_distance_sq(t_cub *cub);
 void		normalize_angle(float *angle);
 int			load_textures(t_cub *cub);
 void		put_rays(t_cub *cub);

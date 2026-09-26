@@ -181,10 +181,11 @@ void	fps_counter(t_cub *cub)
 		refresh_hud(cub);
 		last_stat = now;
 		last_cpu = cpu_now;
+		printf("\rFPS: %.0f  CPU: %.1f%%  RAM: %.0fMB  ",
+			cub->fps_stats->cur_fps, cub->fps_stats->cpu_pct,
+			cub->fps_stats->ram_mb);
+		fflush(stdout);
 	}
-	printf("\rFPS: %.0f  CPU: %.1f%%  RAM: %.0fMB  ",
-		1.0f / delta, cub->fps_stats->cpu_pct, cub->fps_stats->ram_mb);
-	fflush(stdout);
 }
 
 static int	cmp_float_asc(const void *a, const void *b)

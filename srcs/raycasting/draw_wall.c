@@ -54,7 +54,7 @@ void	launch_rays(t_cub *cub)
 	size_t	length;
 
 	length = ft_strlen(cub->map[(int)cub->dr->y]);
-	while (!cub->hw && get_distance(cub) < 10)
+	while (!cub->hw && get_distance_sq(cub) < 100)
 	{
 		cub->dr->x += cub->dr->dir_x * 0.01;
 		if ((size_t)cub->dr->y < cub->map_len \

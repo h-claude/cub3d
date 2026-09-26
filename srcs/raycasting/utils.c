@@ -20,10 +20,19 @@ void	normalize_angle(float *angle)
 		*angle -= 2 * M_PI;
 }
 
+float	get_distance_sq(t_cub *cub)
+{
+	float	dx;
+	float	dy;
+
+	dx = cub->dr->x - cub->x_p;
+	dy = cub->dr->y - cub->y_p;
+	return (dx * dx + dy * dy);
+}
+
 float	get_distance(t_cub *cub)
 {
-	cub->dr->dist = sqrt(pow(cub->dr->x - cub->x_p, 2) \
-		+ pow(cub->dr->y - cub->y_p, 2));
+	cub->dr->dist = sqrt(get_distance_sq(cub));
 	if (cub->dr->dist <= 0)
 		cub->dr->dist = 0.01;
 	return (cub->dr->dist);
