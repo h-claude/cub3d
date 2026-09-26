@@ -47,9 +47,24 @@ void	free_structs(t_cub **cub)
 	free((*cub)->dr);
 	if ((*cub)->image)
 		mlx_delete_image((*cub)->mlx, (*cub)->image);
+	if ((*cub)->hud)
+	{
+		if ((*cub)->hud->fps_img)
+			mlx_delete_image((*cub)->mlx, (*cub)->hud->fps_img);
+		if ((*cub)->hud->cpu_img)
+			mlx_delete_image((*cub)->mlx, (*cub)->hud->cpu_img);
+		if ((*cub)->hud->ram_img)
+			mlx_delete_image((*cub)->mlx, (*cub)->hud->ram_img);
+		free((*cub)->hud);
+	}
 	if ((*cub)->mlx)
 		mlx_terminate((*cub)->mlx);
 	if ((*cub)->map)
 		freetab((*cub)->map, (*cub)->map_len, false);
+	if ((*cub)->fps_stats)
+	{
+		free((*cub)->fps_stats->frame_times);
+		free((*cub)->fps_stats);
+	}
 	free(*cub);
 }

@@ -7,14 +7,23 @@ CC = cc
 CFLAGS 	= -Wall -Wextra -Werror -g3
 LIBFT = -Lturbo_libft -Iturbo_libft/include -lft
 
+UNAME_S := $(shell uname -s)
+
+ifeq ($(UNAME_S), Darwin)
 GLFW = -I/opt/homebrew/include -L/opt/homebrew/lib -lglfw -ldl -pthread -lm
+SYS_STATS = srcs/raycasting/sys_stats_mac.c
+else
+GLFW = -lglfw -ldl -pthread -lm
+SYS_STATS = srcs/raycasting/sys_stats_linux.c
+endif
 MLX = -IMLX42/include/ -LMLX42/build/ -lmlx42 $(GLFW)
 
 OBJDIR= .objs
 
 SRCS = srcs/main.c srcs/parsing/verif.c srcs/parsing/get_data.c srcs/parsing/map.c srcs/parsing/flood_fill.c \
 srcs/raycasting/init_raycasting.c srcs/utils/utils_parsing.c srcs/parsing/player_utils.c srcs/utils/utils.c srcs/utils/free.c \
-srcs/raycasting/draw_wall.c srcs/raycasting/input.c srcs/raycasting/utils.c srcs/bonus_mouse_rotate.c
+srcs/raycasting/draw_wall.c srcs/raycasting/input.c srcs/raycasting/utils.c srcs/bonus_mouse_rotate.c \
+$(SYS_STATS)
 
 OBJS = $(patsubst %.c, $(OBJDIR)/%.o, $(SRCS))
 

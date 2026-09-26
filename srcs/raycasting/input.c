@@ -102,6 +102,7 @@ void	input(void *cub1)
 		cub->dir_p += 0.05;
 	else if (mlx_is_key_down(cub->mlx, MLX_KEY_ESCAPE))
 	{
+		print_fps_summary(cub);
 		mlx_close_window(cub->mlx);
 		free_structs(&cub);
 		exit(0);

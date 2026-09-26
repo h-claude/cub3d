@@ -27,6 +27,7 @@
 # define HEIGHT 1080
 # define MOVE_SPEED 0.05
 # define MOUSE_SENSITIVITY 0.00075
+# define FPS_INITIAL_CAPACITY 3600
 
 typedef enum e_data_type
 {
@@ -37,6 +38,24 @@ typedef enum e_data_type
 	FLOOR,
 	CEILING
 }	t_data_type;
+
+typedef struct s_fps_stats
+{
+	float	*frame_times;
+	int		count;
+	int		capacity;
+	float	cpu_pct;
+	float	ram_mb;
+	float	cur_fps;
+}	t_fps_stats;
+
+typedef struct s_hud
+{
+	mlx_image_t	*fps_img;
+	mlx_image_t	*cpu_img;
+	mlx_image_t	*ram_img;
+	bool		visible;
+}	t_hud;
 
 typedef struct s_textcol
 {
@@ -79,6 +98,8 @@ typedef struct cub
 	struct s_dr			*dr; // data ray
 	mlx_t				*mlx;
 	mlx_image_t			*image;
+	t_fps_stats			*fps_stats;
+	t_hud				*hud;
 }	t_cub;
 
 // parsing
@@ -103,6 +124,9 @@ int			is_player(char player);
 // raycasting
 
 int			launch_raycasting(t_cub *cub);
+void		print_fps_summary(t_cub *cub);
+void		refresh_hud(t_cub *cub);
+void		update_ram_mb(t_cub *cub);
 void		set_window_name(t_cub *cub);
 float		get_distance(t_cub *cub);
 void		normalize_angle(float *angle);

@@ -74,4 +74,9 @@ void	key_press_hook(mlx_key_data_t key_data, void *cub_ptr)
 		else
 			held = false;
 	}
+	else if (key_data.key == MLX_KEY_I && key_data.action == MLX_PRESS)
+	{
+		cub->hud->visible = !cub->hud->visible;
+		refresh_hud(cub);
+	}
 }

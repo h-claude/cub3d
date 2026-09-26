@@ -6,7 +6,7 @@
 /*   By: hclaude <hclaude@student.42mulhouse.fr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/19 22:30:18 by hclaude           #+#    #+#             */
-/*   Updated: 2024/10/20 17:08:42 by hclaude          ###   ########.fr       */
+/*   Updated: 2026/05/11 22:37:46 by hclaude          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,6 +32,8 @@ float	get_distance(t_cub *cub)
 void	set_window_name(t_cub *cub)
 {
 	char	*name;
+
+	name = NULL;
 
 	if (cub->dir_p < 0)
 		cub->dir_p += 2 * M_PI;

@@ -58,6 +58,14 @@ void	init_structs(t_cub *cub)
 	cub->dr->dist = 0;
 	cub->mlx = NULL;
 	cub->image = NULL;
+	cub->fps_stats->count = 0;
+	cub->fps_stats->cpu_pct = 0.0f;
+	cub->fps_stats->ram_mb = 0.0f;
+	cub->fps_stats->cur_fps = 0.0f;
+	cub->hud->fps_img = NULL;
+	cub->hud->cpu_img = NULL;
+	cub->hud->ram_img = NULL;
+	cub->hud->visible = false;
 }
 
 t_cub	*alloc_structs(void)
@@ -81,6 +89,27 @@ t_cub	*alloc_structs(void)
 	{
 		printf("Error\nMalloc failed\n");
 		return (free(cub->textcol), free(cub), NULL);
+	}
+	cub->fps_stats = malloc(sizeof(t_fps_stats));
+	if (!cub->fps_stats)
+	{
+		printf("Error\nMalloc failed\n");
+		return (free(cub->dr), free(cub->textcol), free(cub), NULL);
+	}
+	cub->fps_stats->frame_times = malloc(FPS_INITIAL_CAPACITY * sizeof(float));
+	if (!cub->fps_stats->frame_times)
+	{
+		printf("Error\nMalloc failed\n");
+		return (free(cub->fps_stats), free(cub->dr), free(cub->textcol),
+			free(cub), NULL);
+	}
+	cub->fps_stats->capacity = FPS_INITIAL_CAPACITY;
+	cub->hud = malloc(sizeof(t_hud));
+	if (!cub->hud)
+	{
+		printf("Error\nMalloc failed\n");
+		return (free(cub->fps_stats->frame_times), free(cub->fps_stats),
+			free(cub->dr), free(cub->textcol), free(cub), NULL);
 	}
 	init_structs(cub);
 	return (cub);
